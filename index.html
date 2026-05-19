@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hold'Em Coach</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2230;
+  --felt: #0d2818;
+  --border: #30363d;
+  --green: #3fb950;
+  --green-dim: #1a4a2a;
+  --cyan: #79c0ff;
+  --yellow: #d29922;
+  --red: #f85149;
+  --purple: #bc8cff;
+  --text: #c9d1d9;
+  --muted: #6e7681;
+  --card-bg: #f0f0f0;
+  --radius: 10px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+nav::-webkit-scrollbar { display: none; }
+.nav-logo {
+  font-weight: 700;
+  color: var(--green);
+  font-size: 15px;
+  white-space: nowrap;
+  padding: 14px 12px 14px 0;
+  margin-right: 8px;
+  border-right: 1px solid var(--border);
+}
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 14px 10px;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color .2s, border-color .2s;
+}
+.nav-btn:hover { color: var(--text); }
+.nav-btn.active { color: var(--green); border-bottom-color: var(--green); }
+
+/* ── LAYOUT ── */
+.section { display: none; max-width: 800px; margin: 0 auto; padding: 24px 16px 80px; }
+.section.active { display: block; }
+
+/* ── HOME ── */
+.home-hero {
+  text-align: center;
+  padding: 40px 0 32px;
+}
+.home-hero h1 {
+  font-size: clamp(28px, 6vw, 42px);
+  font-weight: 800;
+  color: var(--green);
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+.home-hero p {
+  color: var(--muted);
+  font-size: 17px;
+  max-width: 480px;
+  margin: 0 auto 32px;
+}
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.module-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: border-color .2s, transform .1s;
+  text-align: left;
+}
+.module-card:hover { border-color: var(--green); transform: translateY(-1px); }
+.module-card .icon { font-size: 28px; margin-bottom: 10px; }
+.module-card h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.module-card p { font-size: 13px; color: var(--muted); }
+.module-card .badge {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: var(--green-dim);
+  color: var(--green);
+}
+.module-card .badge.done { background: #1a3a4a; color: var(--cyan); }
+
+/* ── CONTENT ── */
+h2 { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+h3 { font-size: 17px; font-weight: 600; color: var(--cyan); margin: 24px 0 10px; }
+h4 { font-size: 14px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin: 20px 0 8px; }
+p { color: var(--text); margin-bottom: 12px; }
+.subtitle { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+
+.callout {
+  background: var(--felt);
+  border-left: 3px solid var(--green);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 14px 16px;
+  margin: 16px 0;
+  font-size: 15px;
+}
+.callout.warn { border-color: var(--yellow); background: #1f1a0a; }
+.callout.tip { border-color: var(--cyan); background: #0a1a2a; }
+.callout strong { color: var(--green); }
+.callout.warn strong { color: var(--yellow); }
+.callout.tip strong { color: var(--cyan); }
+
+/* ── CARDS ── */
+.card-display { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 12px 0; }
+.card {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 72px;
+  background: #f7f7f0;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,.5);
+  color: #1a1a1a;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.card .suit { font-size: 16px; }
+.card.red { color: #cc1a1a; }
+.card.back {
+  background: #1a3a6a;
+  border: 2px solid #2a5a9a;
+  color: transparent;
+  font-size: 24px;
+}
+.card.back::after { content: '🂠'; font-size: 32px; color: #4a7abf; }
+.card-label { font-size: 12px; color: var(--muted); align-self: flex-end; padding-bottom: 4px; }
+.vs { color: var(--muted); font-size: 14px; font-weight: 600; align-self: center; }
+.hand-group { display: flex; gap: 6px; align-items: center; }
+
+/* ── HAND RANKINGS ── */
+.rank-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+.rank-table th {
+  background: var(--surface2);
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.rank-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
+.rank-table tr:last-child td { border-bottom: none; }
+.rank-num { color: var(--muted); font-size: 12px; font-weight: 700; }
+.rank-name { color: var(--text); font-weight: 600; }
+.rank-example { color: var(--muted); font-size: 13px; }
+.rank-table tr:hover td { background: var(--surface2); }
+
+/* ── POSITION TABLE ── */
+.pos-table { display: flex; flex-direction: column; gap: 4px; margin: 16px 0; }
+.pos-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+}
+.pos-name {
+  font-weight: 700;
+  width: 60px;
+  flex-shrink: 0;
+}
+.pos-name.early { color: var(--red); }
+.pos-name.mid { color: var(--yellow); }
+.pos-name.late { color: var(--green); }
+.pos-desc { color: var(--muted); flex: 1; }
+.pos-stars { color: var(--yellow); letter-spacing: -2px; font-size: 13px; }
+
+/* ── TABLE DIAGRAM ── */
+.poker-table-wrap { display: flex; justify-content: center; margin: 24px 0; }
+.poker-table {
+  position: relative;
+  width: 320px;
+  height: 200px;
+}
+.felt-oval {
+  position: absolute;
+  inset: 20px 10px;
+  background: #0d3318;
+  border: 6px solid #0a2510;
+  border-radius: 50%;
+  box-shadow: inset 0 0 40px rgba(0,0,0,.5), 0 4px 20px rgba(0,0,0,.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.felt-oval span { color: #1a5a28; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+.seat {
+  position: absolute;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  line-height: 1.2;
+}
+.seat span {
+  display: inline-block;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 7px;
+}
+.seat.btn span { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+.seat.sb span { color: var(--cyan); border-color: #2a4a5a; background: #0a1a2a; }
+.seat.bb span { color: var(--cyan); border-color: #2a4a5a; background: #0a1a2a; }
+.seat.early span { color: var(--red); border-color: #3a1a1a; background: #1a0a0a; }
+.seat.mid span { color: var(--yellow); border-color: #3a2a0a; background: #1a1a0a; }
+.seat.late span { color: #c9d1d9; border-color: var(--border); }
+
+/* ── STARTING HANDS GRID ── */
+.hand-grid {
+  display: grid;
+  grid-template-columns: repeat(13, 1fr);
+  gap: 2px;
+  margin: 16px 0;
+  font-size: 9px;
+}
+.hc {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  font-weight: 700;
+  cursor: default;
+  font-size: 9px;
+}
+.hc.raise { background: #1a4a1a; color: #4ade80; border: 1px solid #2a6a2a; }
+.hc.raise-pos { background: #2a3a1a; color: #a3e635; border: 1px solid #3a5a1a; }
+.hc.call { background: #1a2a3a; color: #7dd3fc; border: 1px solid #1a3a5a; }
+.hc.fold { background: #1a1a1a; color: #4a5568; border: 1px solid #2a2a2a; }
+
+.legend-row { display: flex; gap: 16px; flex-wrap: wrap; margin: 8px 0 20px; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+.legend-dot {
+  width: 12px; height: 12px; border-radius: 2px;
+}
+
+/* ── QUIZ ── */
+.quiz-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-top: 32px;
+}
+.quiz-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.quiz-header h3 { margin: 0; }
+.quiz-progress-text { color: var(--muted); font-size: 13px; }
+.quiz-progress-bar {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.quiz-progress-fill {
+  height: 100%;
+  background: var(--green);
+  border-radius: 2px;
+  transition: width .3s ease;
+}
+.quiz-scenario {
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.quiz-scenario .scenario-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+.quiz-question {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.quiz-context {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+.quiz-opt {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--text);
+  text-align: left;
+  transition: border-color .15s, background .15s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.quiz-opt:hover:not(:disabled) { border-color: var(--cyan); background: #0a1a2a; }
+.quiz-opt .opt-letter {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  flex-shrink: 0;
+  color: var(--muted);
+}
+.quiz-opt.correct { border-color: var(--green) !important; background: var(--green-dim) !important; }
+.quiz-opt.correct .opt-letter { background: var(--green); color: #0d1117; }
+.quiz-opt.wrong { border-color: var(--red) !important; background: #1a0a0a !important; }
+.quiz-opt.wrong .opt-letter { background: var(--red); color: #fff; }
+.quiz-opt:disabled { cursor: default; }
+.quiz-explanation {
+  background: #0a1a10;
+  border: 1px solid var(--green-dim);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-top: 16px;
+  font-size: 14px;
+  display: none;
+}
+.quiz-explanation.show { display: block; }
+.quiz-explanation strong { color: var(--green); }
+.quiz-nav {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+.btn {
+  background: var(--green);
+  color: #0d1117;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity .2s;
+}
+.btn:hover { opacity: .85; }
+.btn:disabled { opacity: .4; cursor: default; }
+.btn.secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn.secondary:hover { border-color: var(--green); }
+.quiz-result {
+  text-align: center;
+  padding: 24px;
+  display: none;
+}
+.quiz-result.show { display: block; }
+.result-score {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--green);
+  margin-bottom: 8px;
+}
+.result-label { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+.result-msg { font-size: 16px; color: var(--text); margin-bottom: 20px; }
+
+/* ── ODDS CALCULATOR ── */
+.calc-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin: 16px 0;
+}
+.calc-row { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 12px; }
+.calc-field { display: flex; flex-direction: column; gap: 4px; }
+.calc-field label { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; }
+.calc-field input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 16px;
+  padding: 8px 12px;
+  width: 100px;
+  outline: none;
+}
+.calc-field input:focus { border-color: var(--cyan); }
+.calc-result {
+  background: var(--felt);
+  border: 1px solid var(--green-dim);
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 15px;
+  margin-top: 4px;
+}
+.calc-result .calc-val { color: var(--green); font-weight: 700; font-size: 18px; }
+
+/* ── OUTS TABLE ── */
+.outs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 16px 0;
+}
+.out-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+}
+.out-card .draw-name { color: var(--text); font-weight: 600; }
+.out-card .out-nums {
+  display: flex;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.out-card .outs-count {
+  font-weight: 800;
+  font-size: 20px;
+}
+.out-card .outs-count.flush { color: var(--purple); }
+.out-card .outs-count.oesd { color: var(--yellow); }
+.out-card .outs-count.gutshot { color: var(--red); }
+.out-card .outs-count.pair { color: var(--cyan); }
+.out-card .outs-count.two { color: #f97316; }
+
+/* ── DECISION TREE ── */
+.decision-tree { margin: 16px 0; }
+.dtree-node {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 8px;
+  padding-left: 0;
+}
+.dtree-node.indent { padding-left: 28px; }
+.dtree-node.indent2 { padding-left: 56px; }
+.dtree-bullet {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.dtree-bullet.q { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); }
+.dtree-bullet.raise { background: var(--green-dim); border: 1px solid var(--green); color: var(--green); font-size: 14px; }
+.dtree-bullet.call { background: #1a2a3a; border: 1px solid #2a4a6a; color: var(--cyan); font-size: 14px; }
+.dtree-bullet.fold { background: #1a0a0a; border: 1px solid #3a1a1a; color: var(--red); font-size: 14px; }
+.dtree-text { font-size: 14px; color: var(--text); padding-top: 1px; }
+.dtree-text em { color: var(--muted); font-style: normal; font-size: 13px; }
+
+/* ── SECTION HEADER ── */
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.section-icon { font-size: 28px; }
+
+/* ── INFO PILLS ── */
+.pill-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid;
+}
+.pill.green { background: var(--green-dim); color: var(--green); border-color: #2a6a2a; }
+.pill.red { background: #1a0a0a; color: var(--red); border-color: #3a1a1a; }
+.pill.yellow { background: #1a1a0a; color: var(--yellow); border-color: #3a2a0a; }
+.pill.blue { background: #0a1a2a; color: var(--cyan); border-color: #1a3a5a; }
+.pill.purple { background: #1a0a2a; color: var(--purple); border-color: #2a1a4a; }
+
+/* ── DIVIDER ── */
+hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 480px) {
+  .module-grid { grid-template-columns: 1fr 1fr; }
+  .outs-grid { grid-template-columns: 1fr; }
+  .hand-grid { font-size: 7px; }
+  .poker-table { width: 280px; height: 176px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">♠ Hold'Em</div>
+  <button class="nav-btn active" onclick="show('home')">Home</button>
+  <button class="nav-btn" onclick="show('basics')">Basics</button>
+  <button class="nav-btn" onclick="show('hands')">Starting Hands</button>
+  <button class="nav-btn" onclick="show('preflop')">Pre-Flop</button>
+  <button class="nav-btn" onclick="show('postflop')">Post-Flop</button>
+  <button class="nav-btn" onclick="show('tournament')">Tournaments</button>
+  <button class="nav-btn" onclick="show('drills')">Drills</button>
+</nav>
+
+<!-- ══════════════════ HOME ══════════════════ -->
+<div id="home" class="section active">
+  <div class="home-hero">
+    <h1>Hold'Em Coach</h1>
+    <p>Build solid fundamentals for friendly tournament poker — from the basics to advanced intermediate play.</p>
+  </div>
+  <div class="module-grid">
+    <div class="module-card" onclick="show('basics')">
+      <div class="icon">🎓</div>
+      <h3>1. The Basics</h3>
+      <p>Hand rankings, table positions, and how betting rounds work.</p>
+      <div class="badge" id="badge-basics">Start →</div>
+    </div>
+    <div class="module-card" onclick="show('hands')">
+      <div class="icon">🃏</div>
+      <h3>2. Starting Hands</h3>
+      <p>Which hands to play, fold, or raise — and why position changes everything.</p>
+      <div class="badge" id="badge-hands">Start →</div>
+    </div>
+    <div class="module-card" onclick="show('preflop')">
+      <div class="icon">⚡</div>
+      <h3>3. Pre-Flop Play</h3>
+      <p>Raise sizes, 3-betting, when to call, and how to play the blinds.</p>
+      <div class="badge" id="badge-preflop">Start →</div>
+    </div>
+    <div class="module-card" onclick="show('postflop')">
+      <div class="icon">📊</div>
+      <h3>4. Post-Flop</h3>
+      <p>Outs, pot odds, board texture, and when to bet, call, or fold.</p>
+      <div class="badge" id="badge-postflop">Start →</div>
+    </div>
+    <div class="module-card" onclick="show('tournament')">
+      <div class="icon">🏆</div>
+      <h3>5. Tournaments</h3>
+      <p>Stack sizes, push/fold, ICM, and adjusting your game late.</p>
+      <div class="badge" id="badge-tournament">Start →</div>
+    </div>
+    <div class="module-card" onclick="show('drills')">
+      <div class="icon">🎯</div>
+      <h3>Mixed Drills</h3>
+      <p>Test your decision-making across all situations.</p>
+      <div class="badge" id="badge-drills">Start →</div>
+    </div>
+  </div>
+  <div class="callout tip" style="margin-top:24px">
+    <strong>How to use this:</strong> Work through the modules in order. Each one ends with a quiz — get through that before moving on. The Drills section mixes everything together once you're ready.
+  </div>
+</div>
+
+<!-- ══════════════════ BASICS ══════════════════ -->
+<div id="basics" class="section">
+  <div class="section-head">
+    <div class="section-icon">🎓</div>
+    <div>
+      <h2>The Basics</h2>
+      <div class="subtitle">Hand rankings · Table positions · Betting rounds</div>
+    </div>
+  </div>
+
+  <h3>Hand Rankings</h3>
+  <p>Best hand wins. You make your best 5-card hand from your 2 hole cards + 5 community cards (7 cards total).</p>
+
+  <table class="rank-table">
+    <thead>
+      <tr><th>#</th><th>Hand</th><th>Example</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="rank-num">1</td><td class="rank-name">Royal Flush</td><td class="rank-example">A♠ K♠ Q♠ J♠ T♠ — same suit, ace-high</td></tr>
+      <tr><td class="rank-num">2</td><td class="rank-name">Straight Flush</td><td class="rank-example">7♥ 8♥ 9♥ T♥ J♥ — five in a row, same suit</td></tr>
+      <tr><td class="rank-num">3</td><td class="rank-name">Four of a Kind</td><td class="rank-example">K♠ K♥ K♦ K♣ 2♠ — all four of a rank</td></tr>
+      <tr><td class="rank-num">4</td><td class="rank-name">Full House</td><td class="rank-example">Q♠ Q♥ Q♦ 9♣ 9♦ — three + a pair</td></tr>
+      <tr><td class="rank-num">5</td><td class="rank-name">Flush</td><td class="rank-example">2♣ 7♣ 9♣ J♣ K♣ — five same suit (any)</td></tr>
+      <tr><td class="rank-num">6</td><td class="rank-name">Straight</td><td class="rank-example">5♠ 6♥ 7♦ 8♣ 9♠ — five in a row (any suit)</td></tr>
+      <tr><td class="rank-num">7</td><td class="rank-name">Three of a Kind</td><td class="rank-example">J♠ J♥ J♣ 4♦ 9♠ — three of a rank</td></tr>
+      <tr><td class="rank-num">8</td><td class="rank-name">Two Pair</td><td class="rank-example">T♠ T♦ 6♥ 6♣ A♠ — two different pairs</td></tr>
+      <tr><td class="rank-num">9</td><td class="rank-name">One Pair</td><td class="rank-example">A♠ A♦ 7♥ 2♣ J♠ — one pair</td></tr>
+      <tr><td class="rank-num">10</td><td class="rank-name">High Card</td><td class="rank-example">A♠ K♦ 9♣ 5♥ 2♠ — nothing made, best card wins</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <strong>Common mistake:</strong> Many beginners overvalue straights and flushes. In reality, one pair wins most pots — the board rarely helps everyone make big hands.
+  </div>
+
+  <h3>Table Positions</h3>
+  <p>Your position relative to the <strong>dealer button</strong> is one of the most important concepts in poker. Acting last gives you huge information advantages — you see what everyone else does before you decide.</p>
+
+  <div class="poker-table-wrap">
+    <div class="poker-table" style="width:320px;height:210px">
+      <div class="felt-oval"><span>HOLD'EM</span></div>
+      <div class="seat btn" style="left:84%;top:68%"><span>BTN 🎯</span></div>
+      <div class="seat sb" style="left:72%;top:88%"><span>SB</span></div>
+      <div class="seat bb" style="left:50%;top:95%"><span>BB</span></div>
+      <div class="seat early" style="left:28%;top:88%"><span>UTG</span></div>
+      <div class="seat mid" style="left:15%;top:68%"><span>HJ</span></div>
+      <div class="seat late" style="left:18%;top:40%"><span>CO</span></div>
+    </div>
+  </div>
+
+  <div class="pos-table">
+    <div class="pos-row">
+      <div class="pos-name early">UTG</div>
+      <div class="pos-desc">Under the Gun — first to act pre-flop. Play only your strongest hands here.</div>
+      <div class="pos-stars">★☆☆☆</div>
+    </div>
+    <div class="pos-row">
+      <div class="pos-name mid">HJ</div>
+      <div class="pos-desc">Hijack — still early, but can open a slightly wider range.</div>
+      <div class="pos-stars">★★☆☆</div>
+    </div>
+    <div class="pos-row">
+      <div class="pos-name late">CO</div>
+      <div class="pos-desc">Cutoff — one off the button. Good position, play many more hands.</div>
+      <div class="pos-stars">★★★☆</div>
+    </div>
+    <div class="pos-row">
+      <div class="pos-name btn" style="color:var(--green)">BTN</div>
+      <div class="pos-desc">Button — best seat. Acts last post-flop every round. Play wide.</div>
+      <div class="pos-stars">★★★★</div>
+    </div>
+    <div class="pos-row">
+      <div class="pos-name sb" style="color:var(--cyan)">SB</div>
+      <div class="pos-desc">Small Blind — acts last pre-flop, but first post-flop. Tricky spot.</div>
+      <div class="pos-stars">★★☆☆</div>
+    </div>
+    <div class="pos-row">
+      <div class="pos-name bb" style="color:var(--cyan)">BB</div>
+      <div class="pos-desc">Big Blind — forced bet, but you get a discount to call. Defend wide.</div>
+      <div class="pos-stars">★★★☆</div>
+    </div>
+  </div>
+
+  <h3>Betting Rounds</h3>
+  <p>Each hand has up to four betting rounds. You can check, bet, call, raise, or fold each time.</p>
+
+  <div class="decision-tree">
+    <div class="dtree-node">
+      <div class="dtree-bullet q">1</div>
+      <div class="dtree-text"><strong>Pre-Flop</strong> — Hole cards dealt. Blinds posted. UTG acts first, then clockwise. <em>This is where most mistakes happen.</em></div>
+    </div>
+    <div class="dtree-node">
+      <div class="dtree-bullet q">2</div>
+      <div class="dtree-text"><strong>The Flop</strong> — Three community cards revealed. SB acts first (or next active player). <em>Board texture changes everything.</em></div>
+    </div>
+    <div class="dtree-node">
+      <div class="dtree-bullet q">3</div>
+      <div class="dtree-text"><strong>The Turn</strong> — Fourth community card. Same order. <em>Pots get big here — be careful.</em></div>
+    </div>
+    <div class="dtree-node">
+      <div class="dtree-bullet q">4</div>
+      <div class="dtree-text"><strong>The River</strong> — Fifth and final card. Last chance to bet, bluff, or fold. <em>Value bet thin, bluff selectively.</em></div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>The golden rule of position:</strong> The later you act, the more information you have. When you're last to act post-flop (on the button), you see every other player check, bet, or fold before you decide. This is an enormous advantage — play it aggressively.
+  </div>
+
+  <!-- QUIZ 1 -->
+  <div class="quiz-section" id="quiz-basics">
+    <div class="quiz-header">
+      <h3>✅ Basics Quiz</h3>
+      <div class="quiz-progress-text" id="qprog-basics">Q1 of 5</div>
+    </div>
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="qfill-basics" style="width:20%"></div></div>
+    <div id="quiz-basics-body"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ STARTING HANDS ══════════════════ -->
+<div id="hands" class="section">
+  <div class="section-head">
+    <div class="section-icon">🃏</div>
+    <div>
+      <h2>Starting Hands</h2>
+      <div class="subtitle">Which cards to play, from where, and why</div>
+    </div>
+  </div>
+
+  <h3>The Core Principle</h3>
+  <p>Most players play too many hands. At a friendly tournament, the biggest edge you can build is simply folding hands that put you in difficult spots. Tight and aggressive beats loose and passive every time.</p>
+
+  <div class="callout">
+    <strong>Default rule:</strong> If you're not willing to raise it, you probably shouldn't play it. Calling (limping) puts you out of position with a weak range — you give up money and information.
+  </div>
+
+  <h3>Hand Categories</h3>
+
+  <h4>Premium — Raise from any position</h4>
+  <div class="card-display">
+    <div class="hand-group">
+      <div class="card">A<span class="suit">♠</span></div>
+      <div class="card">A<span class="suit">♦</span></div>
+    </div>
+    <div class="vs">AA</div>
+    <div class="hand-group">
+      <div class="card">K<span class="suit">♠</span></div>
+      <div class="card">K<span class="suit">♦</span></div>
+    </div>
+    <div class="vs">KK</div>
+    <div class="hand-group">
+      <div class="card">Q<span class="suit">♠</span></div>
+      <div class="card">Q<span class="suit">♦</span></div>
+    </div>
+    <div class="vs">QQ</div>
+    <div class="hand-group">
+      <div class="card">A<span class="suit">♠</span></div>
+      <div class="card red">K<span class="suit">♥</span></div>
+    </div>
+    <div class="vs">AKs</div>
+  </div>
+  <p style="font-size:13px;color:var(--muted)">Raise big pre-flop. Re-raise (3-bet) anyone who raises before you.</p>
+
+  <h4>Strong — Raise from most positions</h4>
+  <div class="card-display">
+    <div class="hand-group">
+      <div class="card">J<span class="suit">♠</span></div>
+      <div class="card">J<span class="suit">♦</span></div>
+    </div>
+    <div class="hand-group">
+      <div class="card">T<span class="suit">♠</span></div>
+      <div class="card">T<span class="suit">♦</span></div>
+    </div>
+    <div class="hand-group">
+      <div class="card red">A<span class="suit">♥</span></div>
+      <div class="card red">Q<span class="suit">♥</span></div>
+    </div>
+    <div class="hand-group">
+      <div class="card">A<span class="suit">♠</span></div>
+      <div class="card red">J<span class="suit">♦</span></div>
+    </div>
+    <div class="hand-group">
+      <div class="card">K<span class="suit">♠</span></div>
+      <div class="card red">Q<span class="suit">♥</span></div>
+    </div>
+  </div>
+  <p style="font-size:13px;color:var(--muted)">JJ, TT, AQs, AJs, KQs — open-raise from HJ onwards. Be cautious if someone raises from early position.</p>
+
+  <h4>Playable — Position dependent</h4>
+  <div class="card-display">
+    <div class="hand-group">
+      <div class="card">9<span class="suit">♠</span></div>
+      <div class="card">9<span class="suit">♦</span></div>
+    </div>
+    <div class="hand-group">
+      <div class="card">8<span class="suit">♠</span></div>
+      <div class="card">8<span class="suit">♦</span></div>
+    </div>
+    <div class="hand-group">
+      <div class="card red">T<span class="suit">♥</span></div>
+      <div class="card red">9<span class="suit">♥</span></div>
+    </div>
+    <div class="hand-group">
+      <div class="card">J<span class="suit">♠</span></div>
+      <div class="card red">T<span class="suit">♦</span></div>
+    </div>
+    <div class="hand-group">
+      <div class="card">A<span class="suit">♠</span></div>
+      <div class="card">9<span class="suit">♦</span></div>
+    </div>
+  </div>
+  <p style="font-size:13px;color:var(--muted)">Small pairs, suited connectors, suited Ax — raise from CO and BTN, fold or call from earlier. These hands need position to be profitable.</p>
+
+  <h4>Trash — Almost always fold</h4>
+  <div class="card-display">
+    <div class="hand-group">
+      <div class="card">7<span class="suit">♠</span></div>
+      <div class="card red">2<span class="suit">♥</span></div>
+    </div>
+    <div class="hand-group">
+      <div class="card">9<span class="suit">♠</span></div>
+      <div class="card red">4<span class="suit">♦</span></div>
+    </div>
+    <div class="hand-group">
+      <div class="card red">J<span class="suit">♦</span></div>
+      <div class="card">5<span class="suit">♠</span></div>
+    </div>
+    <div class="hand-group">
+      <div class="card">K<span class="suit">♠</span></div>
+      <div class="card">3<span class="suit">♦</span></div>
+    </div>
+  </div>
+  <p style="font-size:13px;color:var(--muted)">Offsuit raggy hands — just fold. Even on the button, K3o and J5o put you in dominated situations you can't escape from.</p>
+
+  <h3>The Hand Matrix</h3>
+  <p>Pairs are on the diagonal (top-left to bottom-right). Above the diagonal = suited. Below = offsuit. Suited hands are roughly 3–4% stronger because flush draws are possible.</p>
+  <div id="hand-matrix"></div>
+  <div class="legend-row">
+    <div class="legend-item"><div class="legend-dot" style="background:#1a4a1a;border:1px solid #2a6a2a"></div>Raise any position</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#2a3a1a;border:1px solid #3a5a1a"></div>Raise CO/BTN+</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1a2a3a;border:1px solid #1a3a5a"></div>Call or fold</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1a1a1a;border:1px solid #2a2a2a"></div>Fold</div>
+  </div>
+
+  <h3>Key Concepts to Memorise</h3>
+
+  <div class="callout">
+    <strong>Dominated hands:</strong> K9 vs KQ — both have a King, but KQ dominates K9. If a King flops, K9 often makes second-best hand and loses a big pot. Avoid dominated hands.
+  </div>
+
+  <div class="callout tip">
+    <strong>Suited vs offsuit:</strong> A♥K♥ (suited) is significantly better than A♠K♦ (offsuit) — the flush draw adds equity. It doesn't make weak hands playable, but it makes good hands great.
+  </div>
+
+  <div class="callout warn">
+    <strong>The limping trap:</strong> Limping (calling the big blind without raising) looks harmless but it: lets bad hands see the flop cheaply, builds no information, and puts you in tricky spots. Raise or fold.
+  </div>
+
+  <!-- QUIZ 2 -->
+  <div class="quiz-section" id="quiz-hands">
+    <div class="quiz-header">
+      <h3>✅ Starting Hands Quiz</h3>
+      <div class="quiz-progress-text" id="qprog-hands">Q1 of 5</div>
+    </div>
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="qfill-hands" style="width:20%"></div></div>
+    <div id="quiz-hands-body"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ PRE-FLOP ══════════════════ -->
+<div id="preflop" class="section">
+  <div class="section-head">
+    <div class="section-icon">⚡</div>
+    <div>
+      <h2>Pre-Flop Play</h2>
+      <div class="subtitle">Raise sizes · 3-betting · Calling · The blinds</div>
+    </div>
+  </div>
+
+  <h3>Opening Raise Sizing</h3>
+  <p>When you decide to enter the pot, raise. Don't limp. The standard opening raise in a live friendly tournament is <strong>2.5x to 3x the big blind</strong> — and adjust upward early in the tournament when blinds are small and play is loose.</p>
+
+  <div class="pill-row">
+    <div class="pill green">Early tournament: raise 3x BB</div>
+    <div class="pill blue">Mid tournament: raise 2.5x BB</div>
+    <div class="pill yellow">Short stack &lt;15 BB: push or fold</div>
+  </div>
+
+  <div class="callout tip">
+    <strong>Why not limp?</strong> A raise gives you two ways to win: everyone folds (win immediately) or you continue with the betting lead and position. A limp gives you one way to win: making the best hand. Raise more, limp never.
+  </div>
+
+  <h3>When Someone Raises Before You</h3>
+
+  <div class="decision-tree">
+    <div class="dtree-node">
+      <div class="dtree-bullet q">?</div>
+      <div class="dtree-text">Someone raised from early position (UTG or HJ)</div>
+    </div>
+    <div class="dtree-node indent">
+      <div class="dtree-bullet raise">↑</div>
+      <div class="dtree-text"><strong>3-bet</strong> (re-raise) with: AA, KK, QQ, AKs, AKo — maybe JJ/AQs</div>
+    </div>
+    <div class="dtree-node indent">
+      <div class="dtree-bullet call">→</div>
+      <div class="dtree-text"><strong>Call</strong> with: JJ, TT, AQs, KQs — hands that play well but don't want to bloat the pot vs a tight range</div>
+    </div>
+    <div class="dtree-node indent">
+      <div class="dtree-bullet fold">✕</div>
+      <div class="dtree-text"><strong>Fold</strong> everything else — an UTG raise means a very strong hand range. Don't fight it with medium holdings.</div>
+    </div>
+  </div>
+
+  <div class="decision-tree" style="margin-top:16px">
+    <div class="dtree-node">
+      <div class="dtree-bullet q">?</div>
+      <div class="dtree-text">Someone raised from late position (CO or BTN)</div>
+    </div>
+    <div class="dtree-node indent">
+      <div class="dtree-bullet raise">↑</div>
+      <div class="dtree-text"><strong>3-bet</strong> with: AA, KK, QQ, JJ, AKs, AKo, AQs — and as a bluff: A5s, K9s (good blockers)</div>
+    </div>
+    <div class="dtree-node indent">
+      <div class="dtree-bullet call">→</div>
+      <div class="dtree-text"><strong>Call</strong> wider: TT, 99, AJs, AQo, KQs, suited connectors — their range is wider so you can compete more</div>
+    </div>
+    <div class="dtree-node indent">
+      <div class="dtree-bullet fold">✕</div>
+      <div class="dtree-text"><strong>Fold</strong> dominated hands and trash — K5o, Q8o, J7s etc.</div>
+    </div>
+  </div>
+
+  <h3>3-Betting (Re-raising)</h3>
+  <p>A 3-bet says "I have a very strong hand — or I'm making you pay to find out." It puts maximum pressure on your opponent and builds a big pot when you're ahead.</p>
+
+  <div class="callout">
+    <strong>3-bet sizing:</strong> In position, 3x the open. Out of position, 3.5–4x the open. If someone opened to 600, your 3-bet is ~1800–2400. This forces a fold or a commitment.
+  </div>
+
+  <h3>Facing a 3-Bet</h3>
+  <div class="decision-tree">
+    <div class="dtree-node">
+      <div class="dtree-bullet raise">↑</div>
+      <div class="dtree-text"><strong>4-bet</strong> (shove or re-raise): AA, KK — and occasionally QQ, AKs. You have the nuts, build the pot.</div>
+    </div>
+    <div class="dtree-node">
+      <div class="dtree-bullet call">→</div>
+      <div class="dtree-text"><strong>Call</strong>: QQ, JJ, AKo, AQs in position. You're strong but not strong enough to go to war pre-flop.</div>
+    </div>
+    <div class="dtree-node">
+      <div class="dtree-bullet fold">✕</div>
+      <div class="dtree-text"><strong>Fold</strong>: TT, 99, AJs and below (usually). A 3-bet represents a very strong range — getting it in with TT vs a solid player's 3-bet is usually a losing play.</div>
+    </div>
+  </div>
+
+  <h3>Playing from the Blinds</h3>
+
+  <h4>Small Blind (SB)</h4>
+  <p>You're out of position post-flop every single street — this is a massive disadvantage. <strong>3-bet or fold</strong> is a clean strategy. Calling out of the SB traps you in bad spots. With weaker hands, just fold. With strong hands, raise.</p>
+
+  <h4>Big Blind (BB)</h4>
+  <p>You've already put money in. You get a discount to call. Against a single raise, you can <strong>defend wider</strong> than any other position — roughly 35–40% of hands. This includes many suited hands, connectors, and any pair. Against multiple raisers, tighten back up significantly.</p>
+
+  <div class="callout warn">
+    <strong>BB trap:</strong> Defending the BB with weak hands to "protect your investment" only works if you play those hands well post-flop. If you're not confident post-flop, tighten your BB defence range.
+  </div>
+
+  <h3>Multiway Pots</h3>
+  <p>When 3+ players see the flop, the game changes. Bluffing becomes less profitable (someone almost always has something). Premium hands get more value. Speculative hands (small pairs, suited connectors) become more valuable because of implied odds — if you hit your set or flush, you'll get paid.</p>
+
+  <!-- QUIZ 3 -->
+  <div class="quiz-section" id="quiz-preflop">
+    <div class="quiz-header">
+      <h3>✅ Pre-Flop Quiz</h3>
+      <div class="quiz-progress-text" id="qprog-preflop">Q1 of 6</div>
+    </div>
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="qfill-preflop" style="width:17%"></div></div>
+    <div id="quiz-preflop-body"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ POST-FLOP ══════════════════ -->
+<div id="postflop" class="section">
+  <div class="section-head">
+    <div class="section-icon">📊</div>
+    <div>
+      <h2>Post-Flop Play</h2>
+      <div class="subtitle">Outs · Pot odds · Board texture · Betting decisions</div>
+    </div>
+  </div>
+
+  <h3>Outs: Counting Cards That Help You</h3>
+  <p>An <strong>out</strong> is any unseen card that would improve your hand to likely the best hand. Counting outs lets you estimate your winning probability.</p>
+
+  <div class="outs-grid">
+    <div class="out-card">
+      <div>
+        <div class="draw-name">Flush draw</div>
+        <div style="font-size:12px;color:var(--muted)">4 suited cards, need 1 more</div>
+      </div>
+      <div class="outs-count flush">9</div>
+    </div>
+    <div class="out-card">
+      <div>
+        <div class="draw-name">Open-ended straight</div>
+        <div style="font-size:12px;color:var(--muted)">e.g. 6-7-8-9, need 5 or T</div>
+      </div>
+      <div class="outs-count oesd">8</div>
+    </div>
+    <div class="out-card">
+      <div>
+        <div class="draw-name">Gutshot straight</div>
+        <div style="font-size:12px;color:var(--muted)">e.g. 6-7-9-T, need 8 only</div>
+      </div>
+      <div class="outs-count gutshot">4</div>
+    </div>
+    <div class="out-card">
+      <div>
+        <div class="draw-name">Flush + straight draw</div>
+        <div style="font-size:12px;color:var(--muted)">Combo — huge draw</div>
+      </div>
+      <div class="outs-count two">15</div>
+    </div>
+    <div class="out-card">
+      <div>
+        <div class="draw-name">Two pair → full house</div>
+        <div style="font-size:12px;color:var(--muted)">Pair one of your cards</div>
+      </div>
+      <div class="outs-count pair">4</div>
+    </div>
+    <div class="out-card">
+      <div>
+        <div class="draw-name">Pair → three of a kind</div>
+        <div style="font-size:12px;color:var(--muted)">Two more cards of your rank</div>
+      </div>
+      <div class="outs-count pair">2</div>
+    </div>
+    <div class="out-card">
+      <div>
+        <div class="draw-name">Overcards (AK on low board)</div>
+        <div style="font-size:12px;color:var(--muted)">3 Aces + 3 Kings</div>
+      </div>
+      <div class="outs-count pair">6</div>
+    </div>
+    <div class="out-card">
+      <div>
+        <div class="draw-name">Set → full house/quads</div>
+        <div style="font-size:12px;color:var(--muted)">Pair the board or hit quads</div>
+      </div>
+      <div class="outs-count flush">7</div>
+    </div>
+  </div>
+
+  <h3>The Rule of 2 and 4</h3>
+  <p>Once you know your outs, estimate your chance of hitting:</p>
+
+  <div class="callout">
+    <strong>On the flop</strong> (two cards to come): multiply outs × 4 to get approximate % equity<br>
+    <strong>On the turn</strong> (one card to come): multiply outs × 2 to get approximate % equity<br><br>
+    Example: Flush draw (9 outs) on the flop → 9 × 4 = ~36% chance to hit by the river
+  </div>
+
+  <div class="callout tip">
+    <strong>Quick mental check:</strong> 8 outs (OESD) × 4 ≈ 32% on the flop. 9 outs (flush draw) × 2 ≈ 18% by the river with one card to come. These are slightly overestimates but close enough for real decisions.
+  </div>
+
+  <h3>Pot Odds: Should You Call?</h3>
+  <p>Pot odds compare the <strong>cost of calling</strong> against the <strong>total pot if you call</strong>. If your chance of winning is greater than the pot odds require, call. Otherwise fold.</p>
+
+  <div class="callout">
+    <strong>Formula:</strong> Call Amount ÷ (Pot + Call Amount) = % equity needed to break even<br><br>
+    Example: Pot is 200. Opponent bets 100. You call 100 into a total pot of 400.<br>
+    → 100 ÷ 400 = <strong>25%</strong> equity needed. A flush draw gives you ~36% — easy call.
+  </div>
+
+  <!-- INTERACTIVE CALCULATOR -->
+  <div class="calc-box">
+    <h4 style="margin-top:0">Pot Odds Calculator</h4>
+    <div class="calc-row">
+      <div class="calc-field">
+        <label>Pot size</label>
+        <input type="number" id="calc-pot" placeholder="200" oninput="calcOdds()" />
+      </div>
+      <div class="calc-field">
+        <label>Bet to call</label>
+        <input type="number" id="calc-bet" placeholder="100" oninput="calcOdds()" />
+      </div>
+    </div>
+    <div class="calc-result" id="calc-result">
+      Enter pot size and bet amount above to see your required equity.
+    </div>
+  </div>
+
+  <h3>Board Texture</h3>
+  <p>How the community cards interact with each other — and with likely hand ranges — is called <strong>board texture</strong>. It determines how aggressively you should play.</p>
+
+  <h4>Dry (safe) board</h4>
+  <div class="card-display">
+    <div class="card">K<span class="suit">♠</span></div>
+    <div class="card red">7<span class="suit">♦</span></div>
+    <div class="card">2<span class="suit">♣</span></div>
+  </div>
+  <p style="font-size:14px">No flush draws, no straight draws, no connected cards. The raiser can bet here very often — it's hard for opponents to have connected with this board. C-bet (continuation bet) freely with your whole range.</p>
+
+  <h4>Wet (dangerous) board</h4>
+  <div class="card-display">
+    <div class="card red">J<span class="suit">♥</span></div>
+    <div class="card red">T<span class="suit">♦</span></div>
+    <div class="card red">9<span class="suit">♥</span></div>
+  </div>
+  <p style="font-size:14px">Flush draw + straight possibilities everywhere. Many hands connected here. Be careful betting strong hands — check/call or check/raise instead of betting into this board with top pair. Many opponents will have draws or made hands.</p>
+
+  <h3>Continuation Betting (C-bet)</h3>
+  <p>If you raised pre-flop, you're expected to bet the flop too — this is a <strong>continuation bet</strong>. It keeps the initiative and often wins the pot immediately.</p>
+
+  <div class="pill-row">
+    <div class="pill green">Dry board: c-bet ~50–66% pot</div>
+    <div class="pill yellow">Wet board: c-bet ~50–75% pot or check</div>
+    <div class="pill blue">Multiway: c-bet only with strong hands</div>
+    <div class="pill red">OOP vs aggressive player: check-call or check-raise</div>
+  </div>
+
+  <h3>Value Betting vs Bluffing</h3>
+
+  <div class="callout">
+    <strong>Value bet:</strong> You bet because you want to be called — your hand is ahead of what your opponent might call with. Size to extract maximum value without scaring them off (usually 50–75% pot).
+  </div>
+
+  <div class="callout warn">
+    <strong>Bluffing:</strong> Bet to make a better hand fold. Good bluffs have a story (represent a strong hand on a believable board), are sized credibly, and target opponents who can fold. Bluff less in multiway pots — someone almost always has something.
+  </div>
+
+  <h3>Common Mistakes Post-Flop</h3>
+  <div class="decision-tree">
+    <div class="dtree-node">
+      <div class="dtree-bullet fold">✕</div>
+      <div class="dtree-text"><strong>Calling down without improving:</strong> If the board changes and you have nothing, folding to a bet on the river is fine. "Hope" is not a strategy.</div>
+    </div>
+    <div class="dtree-node">
+      <div class="dtree-bullet fold">✕</div>
+      <div class="dtree-text"><strong>Slow-playing big hands:</strong> With a set or two pair, bet — don't check hoping someone bets. Extract value, and protect against draws.</div>
+    </div>
+    <div class="dtree-node">
+      <div class="dtree-bullet fold">✕</div>
+      <div class="dtree-text"><strong>Continuing with top pair on very dangerous boards:</strong> Facing large bets on T♦J♦Q♦ boards, one pair is often not good enough. Consider folding.</div>
+    </div>
+    <div class="dtree-node">
+      <div class="dtree-bullet fold">✕</div>
+      <div class="dtree-text"><strong>Calling pot-sized bets with only a draw:</strong> Check the odds. A gutshot (4 outs) only gives you ~8% on the turn. Pot-sized calls require ~33% equity. Don't call without the odds.</div>
+    </div>
+  </div>
+
+  <!-- QUIZ 4 -->
+  <div class="quiz-section" id="quiz-postflop">
+    <div class="quiz-header">
+      <h3>✅ Post-Flop Quiz</h3>
+      <div class="quiz-progress-text" id="qprog-postflop">Q1 of 6</div>
+    </div>
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="qfill-postflop" style="width:17%"></div></div>
+    <div id="quiz-postflop-body"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ TOURNAMENT ══════════════════ -->
+<div id="tournament" class="section">
+  <div class="section-head">
+    <div class="section-icon">🏆</div>
+    <div>
+      <h2>Tournament Play</h2>
+      <div class="subtitle">Stack sizes · Push/fold · ICM · Late-game adjustments</div>
+    </div>
+  </div>
+
+  <h3>Stack-to-Blind Ratio (BB depth)</h3>
+  <p>Your strategy changes dramatically based on how many big blinds you have. This single number determines which poker game you're playing.</p>
+
+  <div class="pos-table">
+    <div class="pos-row">
+      <div class="pos-name" style="color:var(--green);width:80px">&gt;40 BB</div>
+      <div class="pos-desc"><strong>Deep stack</strong> — Full poker. All pre-flop and post-flop concepts apply. Speculative hands (small pairs, suited connectors) have good implied odds. Play normally.</div>
+    </div>
+    <div class="pos-row">
+      <div class="pos-name" style="color:var(--yellow);width:80px">20–40 BB</div>
+      <div class="pos-desc"><strong>Medium stack</strong> — Tighten slightly. 3-bets become all-in threats. Avoid calling off a large chunk of your stack with marginal hands. Look to be the one shoving, not calling.</div>
+    </div>
+    <div class="pos-row">
+      <div class="pos-name" style="color:#f97316;width:80px">10–20 BB</div>
+      <div class="pos-desc"><strong>Short stack</strong> — Post-flop poker is over. You're in push/fold territory. Open-shove or fold. Calling raises only to fold later wastes chips you need.</div>
+    </div>
+    <div class="pos-row">
+      <div class="pos-name" style="color:var(--red);width:80px">&lt;10 BB</div>
+      <div class="pos-desc"><strong>Danger zone</strong> — Shove any reasonable hand before the blinds eat you. A9, K8, any pair — push from any position. Do not wait for premium hands.</div>
+    </div>
+  </div>
+
+  <h3>Push/Fold Strategy</h3>
+  <p>When short-stacked, the game simplifies to one decision: <strong>go all-in or fold</strong>. No more limping, no more minimum raises. The goal is to pick up the blinds uncontested or get it in with equity.</p>
+
+  <div class="callout">
+    <strong>Push/fold ranges at 10 BB (approximate):</strong><br><br>
+    From <strong>BTN</strong>: Push any pair, any Ace, any two broadway cards (K8+, Q9+, J9+), any suited connector T9s+<br>
+    From <strong>CO/HJ</strong>: Any pair 55+, A7+, KT+, QJ+<br>
+    From <strong>UTG</strong>: Any pair 88+, AJ+, ATs+, KQs
+  </div>
+
+  <div class="callout tip">
+    <strong>Calling an all-in is different from shoving.</strong> To call, you need much better cards because you're risking your tournament life with no fold equity. If someone shoves into you, fold anything below AJ or 88 unless you have specific reads.
+  </div>
+
+  <h3>ICM — Why Survival Matters</h3>
+  <p><strong>ICM (Independent Chip Model)</strong> is why a chip is not worth the same at every point in a tournament. Early on, more chips = more winning potential. Near the bubble or final table, surviving becomes worth more than accumulating.</p>
+
+  <div class="callout warn">
+    <strong>Bubble play example:</strong> You're 1 player from the money. Average stack. Chip leader shoves on you. You have TT. In a cash game: easy call. In this tournament: you should think very carefully — busting on the bubble (missing the money entirely) is catastrophic. Fold TT here unless the stacks/prize structure make it clearly worth it.
+  </div>
+
+  <h3>Late-Stage Adjustments</h3>
+
+  <h4>Short stacks at your table</h4>
+  <p>When someone has 5–8 BB, they're desperate and will shove light. Don't let them shove into you with a premium hand — raise first to force them in or out on your terms.</p>
+
+  <h4>Stealing blinds</h4>
+  <p>As blinds increase, stealing the blinds becomes essential. From the BTN or CO with no one in the pot, raise aggressively — even with marginal hands. The blinds fold often enough to make this massively profitable.</p>
+
+  <div class="callout">
+    <strong>Example:</strong> Blinds 400/800. You shove 8,000 chips from BTN. Opponents fold 70% of the time. You win 1,200 chips (the blinds) without contest. Over 10 attempts, you net +8,400 chips for free — almost one full starting stack at 10 BB.
+  </div>
+
+  <h4>Final table dynamics</h4>
+  <p>Pay jumps matter. The difference between 5th and 4th place might be significant. Tighten up slightly when short stacks are at risk. Let others knock each other out. Don't risk your stack without good reason when others are about to bust.</p>
+
+  <h4>Heads-up play</h4>
+  <p>If you make it to heads-up, the rules invert. Play almost every hand. Any Ace, any pair, any two-broadway cards are raising hands. K-high can be a raise on the button. Aggression wins heads-up.</p>
+
+  <!-- QUIZ 5 -->
+  <div class="quiz-section" id="quiz-tournament">
+    <div class="quiz-header">
+      <h3>✅ Tournament Quiz</h3>
+      <div class="quiz-progress-text" id="qprog-tournament">Q1 of 5</div>
+    </div>
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="qfill-tournament" style="width:20%"></div></div>
+    <div id="quiz-tournament-body"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ DRILLS ══════════════════ -->
+<div id="drills" class="section">
+  <div class="section-head">
+    <div class="section-icon">🎯</div>
+    <div>
+      <h2>Mixed Drills</h2>
+      <div class="subtitle">Test your decision-making across all situations</div>
+    </div>
+  </div>
+
+  <p>These scenarios mix pre-flop, post-flop, and tournament decisions. Each one tests a fundamental principle. Try to think through why before clicking.</p>
+
+  <div class="quiz-section" id="quiz-drills">
+    <div class="quiz-header">
+      <h3>🎯 Scenario Drills</h3>
+      <div class="quiz-progress-text" id="qprog-drills">Q1 of 10</div>
+    </div>
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="qfill-drills" style="width:10%"></div></div>
+    <div id="quiz-drills-body"></div>
+  </div>
+
+  <div style="margin-top:32px">
+    <h3>Quick Reference</h3>
+
+    <h4>Pre-flop decisions in one sentence</h4>
+    <div class="callout">
+      Strong hand + first in → raise 2.5–3x. Strong hand + someone raised → 3-bet or call. Marginal hand → position matters. Trash → fold.
+    </div>
+
+    <h4>Post-flop decisions in one sentence</h4>
+    <div class="callout">
+      Top pair or better → usually bet for value. Draw → check odds before calling. No hand, no draw → fold to pressure.
+    </div>
+
+    <h4>Tournament mantra</h4>
+    <div class="callout tip">
+      Check your stack. If &lt;15 BB, forget post-flop — it's push or fold. If near the bubble, survival beats chip accumulation. If big stack, bully the table.
+    </div>
+
+    <h4>The Three Commandments</h4>
+    <div class="decision-tree" style="margin-top:8px">
+      <div class="dtree-node">
+        <div class="dtree-bullet raise">1</div>
+        <div class="dtree-text"><strong>Position is power.</strong> Play more hands in position, fewer out of position. This single change improves every post-flop decision.</div>
+      </div>
+      <div class="dtree-node">
+        <div class="dtree-bullet raise">2</div>
+        <div class="dtree-text"><strong>Raise or fold, rarely call.</strong> Calling keeps you passive and out of control. Raising defines your hand, builds pots you'll likely win, and takes initiative.</div>
+      </div>
+      <div class="dtree-node">
+        <div class="dtree-bullet raise">3</div>
+        <div class="dtree-text"><strong>Know your stack depth.</strong> Under 15 BBs, post-flop decisions are irrelevant — just get your chips in with the best hand you can find.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── NAVIGATION ──
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const btns = document.querySelectorAll('.nav-btn');
+  btns.forEach(b => { if (b.getAttribute('onclick') === `show('${id}')`) b.classList.add('active'); });
+  window.scrollTo(0, 0);
+}
+
+// ── HAND MATRIX ──
+const ranks = ['A','K','Q','J','T','9','8','7','6','5','4','3','2'];
+function handClass(r1, r2, suited) {
+  const ri = ranks.indexOf(r1), rj = ranks.indexOf(r2);
+  const hi = Math.min(ri,rj), lo = Math.max(ri,rj);
+  if (hi === lo) {
+    if (hi <= 2) return 'raise';
+    if (hi <= 5) return 'raise-pos';
+    if (hi <= 9) return 'call';
+    return 'fold';
+  }
+  if (suited) {
+    if (hi === 0 && lo <= 3) return 'raise';
+    if (hi === 0 && lo <= 6) return 'raise-pos';
+    if ((hi === 1 && lo <= 4) || (hi === 2 && lo === 3)) return 'raise-pos';
+    if (hi <= 3 && lo <= 6) return 'raise-pos';
+    if (hi <= 5 && lo <= 8) return 'call';
+    if (hi >= 3 && lo - hi <= 2) return 'call';
+    return 'fold';
+  } else {
+    if (hi === 0 && lo <= 2) return 'raise';
+    if (hi === 0 && lo <= 5) return 'raise-pos';
+    if (hi === 1 && lo <= 3) return 'raise-pos';
+    if (hi <= 2 && lo <= 5) return 'call';
+    return 'fold';
+  }
+}
+const matrix = document.getElementById('hand-matrix');
+if (matrix) {
+  const grid = document.createElement('div');
+  grid.className = 'hand-grid';
+  for (let i = 0; i < 13; i++) {
+    for (let j = 0; j < 13; j++) {
+      const cell = document.createElement('div');
+      cell.className = 'hc';
+      if (i === j) {
+        cell.textContent = ranks[i]+ranks[j];
+        cell.classList.add(handClass(ranks[i], ranks[j], false));
+      } else if (j < i) {
+        cell.textContent = ranks[j]+ranks[i]+'s';
+        cell.classList.add(handClass(ranks[i], ranks[j], true));
+      } else {
+        cell.textContent = ranks[i]+ranks[j]+'o';
+        cell.classList.add(handClass(ranks[i], ranks[j], false));
+      }
+      grid.appendChild(cell);
+    }
+  }
+  matrix.appendChild(grid);
+}
+
+// ── POT ODDS CALCULATOR ──
+function calcOdds() {
+  const pot = parseFloat(document.getElementById('calc-pot').value) || 0;
+  const bet = parseFloat(document.getElementById('calc-bet').value) || 0;
+  const res = document.getElementById('calc-result');
+  if (!pot || !bet) { res.innerHTML = 'Enter pot size and bet amount above to see your required equity.'; return; }
+  const total = pot + bet;
+  const pct = ((bet / total) * 100).toFixed(1);
+  res.innerHTML = `You need <span class="calc-val">${pct}%</span> equity to break even on this call.<br><br>
+    <span style="color:var(--muted);font-size:13px">Compare against your outs:<br>
+    Flush draw (9 outs): ~${pot > 0 ? 'check the street' : ''}36% on flop, ~18% on turn<br>
+    OESD (8 outs): ~32% on flop, ~16% on turn<br>
+    Gutshot (4 outs): ~16% on flop, ~8% on turn</span>`;
+}
+
+// ── QUIZ ENGINE ──
+const quizData = {
+  basics: [
+    {
+      label: 'Hand Rankings',
+      q: 'Which of these hands wins?',
+      context: 'Player A has A♠A♦K♠K♦9♣ (two pair, Aces and Kings). Player B has J♣J♥J♦Q♠4♣ (three of a kind, Jacks). Who wins?',
+      opts: ['Player A — two pair with Aces', 'Player B — three Jacks', 'Split pot', 'Highest card wins'],
+      ans: 1,
+      exp: '<strong>Three of a kind always beats two pair</strong>, regardless of the card values. Player B\'s three Jacks win, even though Player A has a more impressive-sounding "Aces and Kings".'
+    },
+    {
+      label: 'Hand Rankings',
+      q: 'You hold 9♦T♦ and the board is J♦Q♦K♦A♦2♠. What do you have?',
+      opts: ['A straight', 'A flush', 'A straight flush', 'A royal flush'],
+      ans: 2,
+      exp: '<strong>9-T-J-Q-K of diamonds = straight flush!</strong> Five consecutive cards of the same suit. This beats a regular straight (not same suit) and a regular flush (not consecutive). A royal flush would require A-K-Q-J-T of the same suit.'
+    },
+    {
+      label: 'Positions',
+      q: 'You\'re on the Button (BTN). Why is this the best position post-flop?',
+      opts: ['You act first, so you set the tempo', 'You act last, so you see everyone else\'s decision first', 'You pay the blind, giving you better pot odds', 'You\'re closest to the dealer'],
+      ans: 1,
+      exp: '<strong>Acting last is the most powerful advantage in poker.</strong> You see every check, bet, and fold before you decide. This information lets you bluff when the table is weak, value bet when you\'re ahead, and fold cheaply when you\'re behind.'
+    },
+    {
+      label: 'Betting Rounds',
+      q: 'Pre-flop, you raise. The flop comes. Who acts first post-flop?',
+      opts: ['The raiser always acts first', 'The player with the best hand acts first', 'The first active player clockwise from the dealer (SB/BB position)', 'The last one to bet pre-flop'],
+      ans: 2,
+      exp: '<strong>Post-flop, the Small Blind (or next active player clockwise from the dealer) always acts first</strong> — this never changes. This is why being in the blinds is tricky: you act first on every post-flop street, regardless of what happened pre-flop.'
+    },
+    {
+      label: 'Hand Rankings',
+      q: 'You have K♠K♥. Board: K♦K♣A♠J♦2♥. What\'s your best 5-card hand?',
+      opts: ['Two pair: Kings and Aces', 'Three of a kind: Kings', 'Full house: Kings full of Aces', 'Four of a Kind: Kings'],
+      ans: 3,
+      exp: '<strong>Four of a Kind (quad Kings)</strong> — you have K♠K♥ in your hand plus K♦K♣ on the board. That\'s all four Kings. Your best 5-card hand is K♠K♥K♦K♣A♠. This beats any full house, any flush, or any straight your opponent might have.'
+    }
+  ],
+
+  hands: [
+    {
+      label: 'Starting Hands',
+      q: 'You\'re UTG (first to act) with J♦9♦. What do you do?',
+      opts: ['Limp in — it\'s a suited connector', 'Raise 3x BB', 'Fold', 'Call the big blind'],
+      ans: 2,
+      exp: '<strong>Fold J9s from UTG.</strong> Suited connectors need position to be profitable. From UTG, you\'ll be out of position against most opponents post-flop, and J9 is too weak to open from early position. Save it for the CO or BTN.'
+    },
+    {
+      label: 'Starting Hands',
+      q: 'You\'re on the BTN (Button) with 7♣7♦. Everyone folds to you. What do you do?',
+      opts: ['Fold — small pairs are dangerous', 'Limp in', 'Raise 2.5x BB', 'Only play if you flop a set'],
+      ans: 2,
+      exp: '<strong>Raise with 77 on the BTN.</strong> You have position, a decent hand, and only two players left (SB and BB) who can contest the pot. Even if called, you\'re in position and 77 has decent equity. Set-mining potential is a bonus, not the only reason to play it.'
+    },
+    {
+      label: 'Dominated Hands',
+      q: 'UTG raises. You have K♠8♦ on the BTN. What do you do?',
+      opts: ['Call — you have King-high and position', 'Raise — punish the UTG raiser', 'Fold — K8o is dominated', 'Check'],
+      ans: 2,
+      exp: '<strong>Fold K8o.</strong> UTG raises represent a tight range: AK, AQ, KQ, KJ, QQ+. If a King flops, your K8 will often make second-best hand against KQ or KJ and lose a big pot. K8 is dominated and should be folded, even with position.'
+    },
+    {
+      label: 'Premium Hands',
+      q: 'You\'re UTG with A♠A♦. Someone raised before you... wait — you\'re first to act. You raise to 3x BB. The BTN 3-bets you. What do you do?',
+      opts: ['Fold — they have a strong hand too', 'Call and see the flop', '4-bet (re-raise)', 'Go all-in immediately'],
+      ans: 2,
+      exp: '<strong>4-bet with Aces.</strong> AA is the best hand in poker. You want to build the pot pre-flop. Calling is fine too, but 4-betting extracts value and potentially gets stacks in pre-flop against KK/QQ. Going all-in is also correct — never slow-play Aces pre-flop against a 3-bet.'
+    },
+    {
+      label: 'Starting Hands',
+      q: 'You\'re in the BB. Everyone folds to the SB who limps. You have Q♣4♦. What do you do?',
+      opts: ['Fold — Q4 is a bad hand', 'Check — take the free flop', 'Raise — punish the limp', 'Go all-in'],
+      ans: 1,
+      exp: '<strong>Check is the correct play.</strong> The SB limped and you can see the flop for free. Even with a weak hand like Q4, you should take the free look — you might flop something. Folding is wrong (it\'s free!). Raising is okay occasionally as a semi-bluff but checking is standard.'
+    }
+  ],
+
+  preflop: [
+    {
+      label: 'Raise Sizing',
+      q: 'Blinds are 200/400. You want to open-raise from the CO. What\'s the correct amount?',
+      opts: ['400 (min-raise)', '600 (1.5x)', '1,000 (2.5x)', '2,000 (5x)'],
+      ans: 2,
+      exp: '<strong>1,000 chips (2.5x the BB).</strong> Standard open is 2.5x. Min-raising (2x) gives too-good odds to callers and lets everyone in cheap. 5x is too large — you only get called by hands that beat you and fold everything you dominate.'
+    },
+    {
+      label: '3-Betting',
+      q: 'A player opens to 900 (2.25x, blinds 200/400). You have QQ on the BTN. What do you do?',
+      opts: ['Call and see the flop', '3-bet to 2,700', '3-bet to 4,000', 'Fold — could be up against KK or AA'],
+      ans: 1,
+      exp: '<strong>3-bet to 2,700 (3x the open).</strong> QQ is a premium hand that plays best by building the pot and narrowing the field. 3-betting in position is ideal. 4,000 is too large. Calling is fine too, but 3-betting extracts more value and gives you the initiative on the flop.'
+    },
+    {
+      label: 'Facing a 3-bet',
+      q: 'You raised with JJ. A tight UTG player 3-bets you. What do you do?',
+      opts: ['4-bet all-in — JJ is a premium hand', 'Call and see the flop', 'Fold — tight players only 3-bet QQ+', 'Fold or call, never 4-bet'],
+      ans: 3,
+      exp: '<strong>Call or fold, but avoid 4-betting JJ vs a tight UTG 3-bet.</strong> A tight player\'s 3-bet range from UTG is typically QQ, KK, AA — hands that dominate JJ. Calling to set-mine is reasonable. 4-betting commits you against hands you\'re badly behind against. If very tight player: fold is fine. Average player: call.'
+    },
+    {
+      label: 'Small Blind',
+      q: 'It\'s folded to you in the SB. You have A♦7♠. What\'s the best approach?',
+      opts: ['Limp — no need to raise with A7o', 'Raise 3x BB', 'Fold', 'Raise or fold, never limp'],
+      ans: 3,
+      exp: '<strong>Raise or fold from the SB — never limp.</strong> A7o is borderline. From SB, you can raise it to steal the BB or fold and preserve chips. Limping is bad because you go post-flop out of position with a mediocre hand and a pot you don\'t control. With A7o specifically: raise is fine, fold is fine, limp is not.'
+    },
+    {
+      label: 'Big Blind',
+      q: 'Blinds 300/600. CO raises to 1,500. You\'re in the BB with K♦9♦. You need to call 900 more. The pot is 1,800 if you call. What do you do?',
+      opts: ['Fold — K9 is too weak to play OOP', 'Call — suited and getting good odds', 'Raise — semi-bluff your strong draw potential', 'Limp and see the flop'],
+      ans: 1,
+      exp: '<strong>Calling is fine here.</strong> K9s is a decent hand, you\'re getting 2:1 pot odds (call 900 into a 1,800 pot = 33% equity needed), and K9 suited has decent playability. You could also 3-bet as a semi-bluff. What you don\'t do is fold — K9s from the BB facing a CO raise is a standard defend.'
+    },
+    {
+      label: 'Reading Limpers',
+      q: '3 players limp. You\'re on the BTN with A♠K♦. What do you do?',
+      opts: ['Limp along — no need to raise into 3 players', 'Raise large — 5–6x BB to punish the limpers', 'Fold — too many opponents', 'Raise the standard 2.5x'],
+      ans: 1,
+      exp: '<strong>Raise large — 5–6x BB (or more) when there are multiple limpers.</strong> AKo is a premium hand. Limping lets everyone in cheap and makes the pot multiway and unpredictable. Raise to isolate and build the pot. The more limpers, the bigger your raise should be.'
+    }
+  ],
+
+  postflop: [
+    {
+      label: 'Counting Outs',
+      q: 'You have 8♥9♥. Flop: 6♦7♣K♠. How many outs to a straight?',
+      opts: ['4 outs (gutshot)', '6 outs', '8 outs (OESD)', '10 outs'],
+      ans: 2,
+      exp: '<strong>8 outs — open-ended straight draw (OESD).</strong> You need a 5 (four cards: 5♠5♦5♣5♥) to complete the low end, or a T (four cards: T♠T♦T♣T♥) to complete the high end. 4 + 4 = 8 outs. On the flop, that\'s roughly 8 × 4 = 32% chance to hit by the river.'
+    },
+    {
+      label: 'Pot Odds',
+      q: 'Pot is 300. Opponent bets 150. You have a flush draw (9 outs, ~18% to hit on the turn). Should you call?',
+      opts: ['Yes — flush draws always call', 'No — 18% equity is less than the 33% required', 'Yes — pot odds justify it', 'No — always fold draws'],
+      ans: 2,
+      exp: '<strong>No — you\'re not getting the right odds.</strong> Call 150 into 450 total = 33% equity needed. Your flush draw on the turn is ~18%. You don\'t have enough equity to call profitably based on pot odds alone. (Note: implied odds — potential future winnings — might still justify a call, but basic pot odds say fold.)'
+    },
+    {
+      label: 'Board Texture',
+      q: 'You raised pre-flop with A♠K♣. Flop: A♥8♣3♦. One opponent checks to you. What do you do?',
+      opts: ['Check behind — trap them', 'Bet 50% of the pot', 'Bet 100% of the pot', 'Fold — top pair is vulnerable'],
+      ans: 1,
+      exp: '<strong>Bet 50% of the pot.</strong> You have top pair top kicker (TPTK) on a dry board — a very strong hand. Bet for value. Checking to "trap" is a mistake: there are no scary draws to worry about, and your opponent needs to put money in the pot to lose it to you. Bet ~50% pot to get called by weaker Aces, 8s, and 3s.'
+    },
+    {
+      label: 'Continuation Betting',
+      q: 'You raised pre-flop. Flop comes J♠T♠9♦ — a very wet, coordinated board. Opponent checks. You have A♦K♣ (no pair, no draw). What do you do?',
+      opts: ['Bet 75% pot — you have ace-high and raised', 'Check — this board missed you and hit callers', 'Bet small 25% pot', 'Go all-in to blow them off'],
+      ans: 1,
+      exp: '<strong>Check back.</strong> On a J-T-9 board, many hands connect — straights, two pairs, sets, flush draws. Your AK missed completely with no draw. Betting here is a bluff into a calling range that likely connected. Check, take the free card, and hope to hit an A or K on the turn.'
+    },
+    {
+      label: 'Value Betting',
+      q: 'You have K♥K♦. Board: K♠7♦2♣4♠9♥ (rainbow, dry). Opponent checks river. You\'re IP. What do you do?',
+      opts: ['Check — no need to bet with a set', 'Bet small (25%) to get called', 'Bet big (75–100%) to extract maximum value', 'Go all-in'],
+      ans: 2,
+      exp: '<strong>Bet big — 75% to 100% pot.</strong> You have top set (three Kings) on a dry board. This is one of the best hands possible. Your opponent has checked, meaning they likely have a pair or some showdown value. Bet large — they can\'t fold a pair of Nines easily. Extract maximum value from your monster.'
+    },
+    {
+      label: 'Calling Decisions',
+      q: 'You have 6♣6♦. Flop: A♠Q♣J♦. Opponent bets pot. What do you do?',
+      opts: ['Call — 66 is still a pair', 'Raise — they might be bluffing', 'Fold — you\'re likely beaten', 'Check'],
+      ans: 2,
+      exp: '<strong>Fold.</strong> On an A-Q-J board, you have a pair of Sixes with no draws and three overcards on the board. A pot-sized bet represents a strong hand. You\'re likely beaten by top pair or better, and you have very few outs (only two Sixes in the deck would help). This is a clear fold.'
+    }
+  ],
+
+  tournament: [
+    {
+      label: 'Stack Depth',
+      q: 'You have 12 BB. It\'s folded to you on the BTN. You have A♣8♠. What do you do?',
+      opts: ['Raise to 3x BB and play post-flop', 'Fold — A8 isn\'t strong enough', 'Shove all-in', 'Min-raise and fold to a 3-bet'],
+      ans: 2,
+      exp: '<strong>Shove all-in.</strong> At 12 BB, you\'re in push/fold territory. A8o is a clear shove from the BTN — you have an Ace (blocker to AA/AK) and decent equity against calling ranges. Raising small and then folding to a 3-bet wastes chips. Push or fold, nothing in between.'
+    },
+    {
+      label: 'Push/Fold',
+      q: 'You have 8 BB in the BB. BTN shoves all-in. You have K♠5♦. What do you do?',
+      opts: ['Call — you\'re getting good pot odds', 'Fold — K5 isn\'t strong enough to call off your stack', 'Re-shove (already all-in as BB)'],
+      ans: 1,
+      exp: '<strong>Fold K5o.</strong> This is a crucial distinction: shoving and calling are different. To call an all-in and risk your tournament life, you need much better cards — roughly AJ+, A5s+, 88+ against an unknown range. K5o is too weak. The caller needs to be ahead more often than the pot odds require, and K5o doesn\'t cut it.'
+    },
+    {
+      label: 'ICM',
+      q: 'You\'re 2 spots from the money (bubble). Average stack. Big stack shoves into you. You have J♣J♦. What\'s the most tournament-correct play?',
+      opts: ['Call — JJ is a premium hand, always call', 'Fold — ICM pressure means survival is worth more than chips here', 'It depends on stack sizes and the pay jump', 'Shove back (you\'re already all-in)'],
+      ans: 2,
+      exp: '<strong>"It depends" is the honest answer</strong>, but folding JJ is often correct near the bubble. ICM (Independent Chip Model) says survival has real monetary value when near the money. Busting on the bubble is the worst outcome. Against a wide-ranging big stack, calling JJ for your tournament life right before the money has significant risk. Many tournament players fold JJ here — especially if other short stacks are about to bust.'
+    },
+    {
+      label: 'Blind Stealing',
+      q: 'You\'re on the BTN with 6♠5♠ (20 BB stack). Blinds are 1,000/2,000. Both blinds are tight players. Everyone folds to you. What do you do?',
+      opts: ['Fold — 65s isn\'t strong enough', 'Limp in', 'Shove all-in', 'Raise to 4,500'],
+      ans: 2,
+      exp: '<strong>Shove all-in.</strong> At 20 BB with tight opponents in the blinds, 65s is a great shove. Tight players fold a lot, so you win the blinds (3,000) uncontested often enough. When called, 65s has solid equity with flush + straight draw potential. This is exactly the spot to steal: position, tight opponents, and a live hand.'
+    },
+    {
+      label: 'Stack Management',
+      q: 'You have 35 BB. The chip leader at your table has 120 BB and raises aggressively every hand. You have 9♦9♣. He raises again. What do you do?',
+      opts: ['Fold — he\'s aggressive, probably has a good hand', 'Call — set-mine and see the flop', '3-bet — 99 is strong enough to 3-bet', 'Shove all-in immediately'],
+      ans: 2,
+      exp: '<strong>3-bet with 99.</strong> Against an aggressive chip leader who raises wide, 99 is a clear 3-bet. You want to re-raise and put pressure back on them. Calling to set-mine with 35 BB isn\'t ideal — implied odds require ~15x stack depth. 3-betting takes back the initiative. If they 4-bet shove, you can fold and still have 25+ BB to work with.'
+    }
+  ],
+
+  drills: [
+    {
+      label: 'Pre-Flop — Position',
+      q: 'You\'re dealt T♦9♦. UTG raises. 2 players call. You\'re on the BTN. What do you do?',
+      context: 'Effective stacks: 40 BB. This is a multiway pot.',
+      opts: ['Fold — 3 players are already in', 'Call — position and implied odds are excellent', 'Re-raise (3-bet)', 'Fold unless you have premium cards'],
+      ans: 1,
+      exp: '<strong>Call with T9s on the BTN.</strong> This is exactly the spot suited connectors thrive in: you have position on everyone, a multiway pot (better implied odds if you hit), and T9s has great drawing potential. Calling is perfect. 3-betting turns it into a heads-up pot and wastes the positional and implied-odds advantage of this hand.'
+    },
+    {
+      label: 'Pre-Flop — 3-bet',
+      q: 'CO raises to 600 (blinds 100/200). You\'re on BTN with A♦A♠. What do you do?',
+      opts: ['Call and set a trap', '3-bet to 1,800', '4-bet shove', 'Fold (joking)'],
+      ans: 1,
+      exp: '<strong>3-bet to 1,800.</strong> With Aces, you always 3-bet. Calling allows the blinds in cheap and you lose the positional and range-advantage of building the pot now. 3-bet to ~3x the open. If they 4-bet, then shove. Never slow-play Aces pre-flop.'
+    },
+    {
+      label: 'Post-Flop — Drawing',
+      q: 'You have A♣5♣. Flop: K♣7♣2♥. Pot is 400. Opponent bets 200. You have a nut flush draw (9 outs). Do you call?',
+      context: 'Call 200 into total pot of 800 = 25% equity needed. Flush draw on flop = ~36%.',
+      opts: ['No — too risky with just a draw', 'Yes — call, the pot odds support it', 'Raise — use your drawing hand as a semi-bluff', 'Fold — Ace-high is too weak'],
+      ans: 1,
+      exp: '<strong>Call (or raise!).</strong> You need 25% equity to call — you have ~36% (flush draw). The call is mathematically correct. Even better: raising turns this into a semi-bluff. You might win immediately if they fold, and if they call, you still have 36% to improve. Both call and raise are good — but definitely don\'t fold.'
+    },
+    {
+      label: 'Post-Flop — Board Reading',
+      q: 'Board: Q♠J♠T♠. You have A♠2♦. Your opponent bets large. What do you consider?',
+      opts: ['Call — you have top pair potential', 'Raise — you have the nut flush draw', 'Fold — dangerous board even with the nut flush draw', 'Just call or raise — you have the nuts (Royal Flush draw)'],
+      ans: 3,
+      exp: '<strong>A♠ + Q♠J♠T♠ = you need K♠ or any Spade for the flush, but more importantly: you have a Royal Flush draw!</strong> A-K-Q-J-T of spades would be the best hand possible. You also already have straight and flush draws. This is an enormous draw — raise big or call. You should never fold with the nut draw and potential for the best hand in poker.'
+    },
+    {
+      label: 'Tournament — Short Stack',
+      q: 'You have 6 BB in the CO. Blinds 500/1000. Everyone folds to you. You have K♦J♦. What do you do?',
+      opts: ['Fold — 6 BB isn\'t enough to play', 'Raise to 2,500', 'Shove all-in', 'Limp'],
+      ans: 2,
+      exp: '<strong>Shove all-in immediately.</strong> At 6 BB in the CO, you shove any playable hand. KJo is well above the threshold — it\'s a clear shove. You need chips. The BTN, SB, and BB fold often enough that you pick up 1,500 in blinds. When called, KJ has decent equity. Raising to 2,500 and then folding is a disaster — never raise then fold with 6 BB.'
+    },
+    {
+      label: 'Pre-Flop — Facing Limpers',
+      q: 'Blinds 100/200. 4 players limp. You\'re on BTN with K♥Q♥. What do you do?',
+      opts: ['Limp along — 4 players already in', 'Raise to 600 (3x BB)', 'Raise to 1,200–1,400 (6–7x BB)', 'Fold — too many opponents for KQs'],
+      ans: 2,
+      exp: '<strong>Raise large — 6–7x BB.</strong> KQs is a strong hand. With 4 limpers, a standard 3x raise doesn\'t work — they\'re all getting great odds to call. Raise big enough to thin the field (1,200–1,400). If they all call anyway, you still have position and a quality suited hand. Never limp KQs.'
+    },
+    {
+      label: 'Post-Flop — Value',
+      q: 'You have J♥J♦. Board: J♣8♠3♦ (dry board). You raised pre-flop. Opponent checks. What do you do?',
+      opts: ['Check — let them bluff', 'Bet 25% pot (probe)', 'Bet 60–75% pot (value)', 'Check-raise trap'],
+      ans: 2,
+      exp: '<strong>Bet 60–75% pot for value.</strong> You have top set (three Jacks) on a safe board. This is an extremely strong hand. Bet for value — your opponent has pairs, draws, and middle cards they\'ll call with. Checking to trap occasionally is fine, but usually you want to bet to build the pot now. Fast-play your big hands — slow-playing costs you money.'
+    },
+    {
+      label: 'Tournament — ICM Bubble',
+      q: 'Final 10 players, top 9 get paid. You\'re average stack (28 BB). Someone with 3 BB shoves from UTG. You\'re in the CO with A♠K♣. What do you do?',
+      opts: ['Call — AK dominates most of their range', 'Fold — let the short stack bust to someone else', 'Fold — ICM says avoid risk near the bubble'],
+      ans: 0,
+      exp: '<strong>Call here.</strong> The short stack has 3 BB and shoves from UTG — their range is wide (any ace, any king, any pair). AK dominates most of this range and is a small favourite against pairs (55% chance). Importantly, this is a cheap risk (only 3 BB) vs a potentially huge chip gain. With only 3 BB at risk, ICM pressure is minimal. If it were a large stack shoving, fold would be considered — but against a 3 BB desperation shove, call with AK.'
+    },
+    {
+      label: 'Post-Flop — Bluffing',
+      q: 'You raised pre-flop with 6♦6♣. Flop: A♠K♦Q♣. Both opponents check to you. What do you do?',
+      context: '3-way pot. You have no pair, no draw on a high, connected board.',
+      opts: ['C-bet 75% — you raised, they checked, take it', 'Check — this board is terrible for your hand', 'Check — multiway bluffs almost never work', 'Fold'],
+      ans: 2,
+      exp: '<strong>Check back.</strong> On A-K-Q with three players, someone almost certainly connected. C-betting here as a bluff is a mistake — you\'re bluffing into multiple opponents who have aces, kings, queens, AK, AQ, KQ, etc. Bluffs in multiway pots need to fold out multiple opponents simultaneously, which almost never happens. Take the free card and hope to catch a 6.'
+    },
+    {
+      label: 'Fundamentals — Aggression',
+      q: 'It\'s folded to you in the SB. You have Q♦8♦. BB is a tight, passive player. What\'s the best play?',
+      opts: ['Limp — just see a cheap flop', 'Raise 3x BB — steal opportunity vs tight BB', 'Fold — Q8s isn\'t strong enough', 'Check (can\'t — you must post the SB)'],
+      ans: 1,
+      exp: '<strong>Raise 3x BB.</strong> Q8s is a borderline hand, but heads-up against a tight, passive BB, you should raise with a wide range. They fold often, giving you the pot. When called, you have position... wait, you\'re in the SB so you\'re out of position. Actually, this is a close spot — raise or fold both work, but limping never works. The tight BB folds to raises often enough to make this profitable.'
+    }
+  ]
+};
+
+// ── QUIZ STATE ──
+const quizState = {};
+
+function initQuiz(moduleId) {
+  const questions = quizData[moduleId];
+  quizState[moduleId] = { current: 0, correct: 0, answered: false };
+  renderQuestion(moduleId);
+}
+
+function renderQuestion(moduleId) {
+  const state = quizState[moduleId];
+  const questions = quizData[moduleId];
+  const q = questions[state.current];
+  const body = document.getElementById(`quiz-${moduleId}-body`);
+  const total = questions.length;
+  const idx = state.current;
+
+  document.getElementById(`qprog-${moduleId}`).textContent = `Q${idx+1} of ${total}`;
+  document.getElementById(`qfill-${moduleId}`).style.width = `${((idx+1)/total)*100}%`;
+
+  const letters = ['A','B','C','D'];
+  let html = `
+    <div class="quiz-scenario">
+      <div class="scenario-label">📍 ${q.label}</div>
+      <div class="quiz-question">${q.q}</div>
+      ${q.context ? `<div class="quiz-context">${q.context}</div>` : ''}
+      ${q.hand ? renderCardHTML(q.hand, q.board) : ''}
+    </div>
+    <div class="quiz-options">
+  `;
+  q.opts.forEach((opt, i) => {
+    html += `<button class="quiz-opt" id="opt-${moduleId}-${i}" onclick="checkAnswer('${moduleId}', ${i})">
+      <div class="opt-letter">${letters[i]}</div>${opt}
+    </button>`;
+  });
+  html += `</div>
+    <div class="quiz-explanation" id="exp-${moduleId}"></div>
+    <div class="quiz-nav" id="nav-${moduleId}"></div>
+  `;
+
+  const resultShown = state.current >= total && state.done;
+  if (!resultShown) {
+    body.innerHTML = html;
+  }
+
+  if (state.done) {
+    showResult(moduleId);
+  }
+}
+
+function renderCardHTML(hand, board) {
+  if (!hand) return '';
+  let html = '<div class="card-display" style="margin:10px 0">';
+  hand.forEach(c => html += cardHTML(c));
+  if (board) {
+    html += '<div class="vs">+</div>';
+    board.forEach(c => html += cardHTML(c));
+  }
+  html += '</div>';
+  return html;
+}
+
+function cardHTML(c) {
+  const rank = c.slice(0, -1);
+  const suit = c.slice(-1);
+  const suitChar = {h:'♥',d:'♦',s:'♠',c:'♣'}[suit];
+  const isRed = suit === 'h' || suit === 'd';
+  return `<div class="card${isRed?' red':''}"><span>${rank}</span><span class="suit">${suitChar}</span></div>`;
+}
+
+function checkAnswer(moduleId, selected) {
+  const state = quizState[moduleId];
+  if (state.answered) return;
+  state.answered = true;
+
+  const q = quizData[moduleId][state.current];
+  const isCorrect = selected === q.ans;
+  if (isCorrect) state.correct++;
+
+  const opts = document.querySelectorAll(`[id^="opt-${moduleId}-"]`);
+  opts.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.ans) btn.classList.add('correct');
+    else if (i === selected && !isCorrect) btn.classList.add('wrong');
+  });
+
+  const exp = document.getElementById(`exp-${moduleId}`);
+  exp.innerHTML = (isCorrect ? '✅ ' : '❌ ') + q.exp;
+  exp.classList.add('show');
+
+  const nav = document.getElementById(`nav-${moduleId}`);
+  const total = quizData[moduleId].length;
+  const isLast = state.current === total - 1;
+
+  nav.innerHTML = `<button class="btn" onclick="nextQuestion('${moduleId}')">${isLast ? 'See Results' : 'Next →'}</button>`;
+}
+
+function nextQuestion(moduleId) {
+  const state = quizState[moduleId];
+  const total = quizData[moduleId].length;
+  state.current++;
+  state.answered = false;
+
+  if (state.current >= total) {
+    state.done = true;
+    showResult(moduleId);
+  } else {
+    renderQuestion(moduleId);
+  }
+}
+
+function showResult(moduleId) {
+  const state = quizState[moduleId];
+  const total = quizData[moduleId].length;
+  const pct = Math.round((state.correct / total) * 100);
+  const body = document.getElementById(`quiz-${moduleId}-body`);
+
+  let msg = '';
+  if (pct >= 80) msg = 'Excellent! You\'ve got a solid handle on this.';
+  else if (pct >= 60) msg = 'Good work — a few concepts to review, but you\'re building the right foundations.';
+  else msg = 'Worth re-reading this module before moving on — the fundamentals here are critical.';
+
+  body.innerHTML = `
+    <div class="quiz-result show">
+      <div class="result-score">${state.correct}/${total}</div>
+      <div class="result-label">${pct}% correct</div>
+      <div class="result-msg">${msg}</div>
+      <button class="btn secondary" onclick="initQuiz('${moduleId}')" style="margin-right:8px">Retry</button>
+    </div>
+  `;
+
+  // Update badge on home
+  const badge = document.getElementById(`badge-${moduleId}`);
+  if (badge && pct >= 60) {
+    badge.textContent = `✓ ${pct}%`;
+    badge.classList.add('done');
+  }
+}
+
+// ── INIT ALL QUIZZES ──
+['basics','hands','preflop','postflop','tournament','drills'].forEach(id => {
+  if (quizData[id]) initQuiz(id);
+});
+</script>
+</body>
+</html>
