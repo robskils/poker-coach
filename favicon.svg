@@ -1,20 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <defs>
     <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1a2e1a"/>
+      <stop offset="0%" stop-color="#1c321c"/>
       <stop offset="100%" stop-color="#0c1a0c"/>
     </linearGradient>
     <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#e8d070"/>
+      <stop offset="0%" stop-color="#edd060"/>
       <stop offset="50%" stop-color="#c9a84c"/>
-      <stop offset="100%" stop-color="#a07828"/>
+      <stop offset="100%" stop-color="#9a7220"/>
     </linearGradient>
   </defs>
-  <!-- Card -->
-  <rect width="32" height="32" rx="5" fill="#0c1a0c"/>
-  <rect x="1" y="1" width="30" height="30" rx="4.5" fill="url(#card)" stroke="rgba(201,168,76,0.4)" stroke-width="0.75"/>
-  <!-- A in top-left corner -->
-  <text x="4" y="11" font-family="Georgia, serif" font-weight="900" font-size="9" fill="url(#gold)">A</text>
-  <!-- Large centred spade -->
-  <text x="16" y="26" text-anchor="middle" font-family="serif" font-size="22" fill="url(#gold)">♠</text>
+  <!-- Card background -->
+  <rect width="32" height="32" rx="5" fill="#0a140a"/>
+  <rect x="1" y="1" width="30" height="30" rx="4.5" fill="url(#card)" stroke="rgba(201,168,76,0.45)" stroke-width="0.8"/>
+  <!-- Spade path: fills most of the card -->
+  <path d="
+    M 16,3
+    C 16,3 29,10 29,18
+    C 29,23 24,25 20,22
+    C 22,26 23,29 21,29
+    L 11,29
+    C 9,29 10,26 12,22
+    C 8,25 3,23 3,18
+    C 3,10 16,3 16,3 Z
+  " fill="url(#gold)"/>
 </svg>
