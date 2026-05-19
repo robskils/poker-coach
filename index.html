@@ -689,6 +689,82 @@ hr.gold { border-color: var(--border-gold); }
 .hc.call { background: rgba(5,20,50,0.9); color: #60a0d8; border: 1px solid rgba(46,100,180,0.3); }
 .hc.fold { background: rgba(8,10,8,0.9); color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.04); }
 
+/* ── HERO CARD FAN ── */
+.hero-cards-fan {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  width: 0; height: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.hfan {
+  position: absolute;
+  width: 104px;
+  height: 146px;
+  background: linear-gradient(160deg, #faf7ed 0%, #ede6d0 60%, #d8d0b8 100%);
+  border-radius: 11px;
+  transform-origin: center 230px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  color: #111;
+  border: 1.5px solid rgba(0,0,0,0.12);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.8),
+    0 2px 8px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.7);
+  margin-left: -52px;
+  margin-top: -73px;
+  opacity: 0.13;
+  transition: opacity .3s;
+}
+.home-hero:hover .hfan { opacity: 0.18; }
+.hfan-rank {
+  font-size: 32px;
+  line-height: 1;
+  font-family: 'Playfair Display', Georgia, serif;
+}
+.hfan-suit {
+  font-size: 26px;
+  line-height: 1;
+  margin-top: 2px;
+}
+.hfan.red { color: #bb1515; }
+/* Corner pips */
+.hfan::before {
+  content: attr(data-r) attr(data-s);
+  position: absolute;
+  top: 6px; left: 8px;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.1;
+  white-space: nowrap;
+  letter-spacing: -0.5px;
+}
+.hfan::after {
+  content: attr(data-r) attr(data-s);
+  position: absolute;
+  bottom: 6px; right: 8px;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.1;
+  white-space: nowrap;
+  letter-spacing: -0.5px;
+  transform: rotate(180deg);
+}
+.hfan-1 { transform: rotate(-28deg); z-index: 1; }
+.hfan-2 { transform: rotate(-14deg); z-index: 2; }
+.hfan-3 { transform: rotate(0deg);   z-index: 3; }
+.hfan-4 { transform: rotate(14deg);  z-index: 2; }
+.hfan-5 { transform: rotate(28deg);  z-index: 1; }
+/* Keep hero text above the cards */
+.home-hero h1,
+.home-hero p,
+.home-hero > div { position: relative; z-index: 1; }
+
 /* ── RESPONSIVE ── */
 @media (max-width: 480px) {
   .module-grid { grid-template-columns: 1fr 1fr; }
@@ -714,6 +790,13 @@ hr.gold { border-color: var(--border-gold); }
 <!-- ══════════════════ HOME ══════════════════ -->
 <div id="home" class="section active">
   <div class="home-hero">
+    <div class="hero-cards-fan" aria-hidden="true">
+      <div class="hfan hfan-1" data-r="A" data-s="♠"><div class="hfan-rank">A</div><div class="hfan-suit">♠</div></div>
+      <div class="hfan hfan-2 red" data-r="K" data-s="♥"><div class="hfan-rank">K</div><div class="hfan-suit">♥</div></div>
+      <div class="hfan hfan-3 red" data-r="Q" data-s="♦"><div class="hfan-rank">Q</div><div class="hfan-suit">♦</div></div>
+      <div class="hfan hfan-4" data-r="J" data-s="♣"><div class="hfan-rank">J</div><div class="hfan-suit">♣</div></div>
+      <div class="hfan hfan-5" data-r="T" data-s="♠"><div class="hfan-rank">T</div><div class="hfan-suit">♠</div></div>
+    </div>
     <h1>Hold'Em Coach</h1>
     <p>Build solid fundamentals for friendly tournament poker — from the basics to advanced intermediate play.</p>
     <div style="display:flex;justify-content:center;gap:24px;font-size:28px;color:var(--border-gold);letter-spacing:4px;margin-top:4px">♠ ♥ ♦ ♣</div>
