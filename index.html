@@ -91,7 +91,7 @@ nav {
 
 /* ── MOBILE NAV ── */
 .nav-mobile { display: none; }
-@media (max-width: 640px) {
+@media (max-width: 900px) {
   .nav-desktop { display: none; }
   .nav-mobile {
     display: flex;
@@ -192,49 +192,155 @@ nav {
 }
 .module-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
 }
 .module-card {
-  background: var(--surface);
-  background-image: linear-gradient(145deg, rgba(12,51,24,0.6) 0%, rgba(6,9,9,0.4) 100%);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
+  background: linear-gradient(160deg, #0d2114 0%, #07100a 100%);
+  border: 1px solid rgba(201,168,76,0.18);
+  border-top: 2px solid var(--gold);
+  border-radius: 14px;
+  padding: 28px 24px 22px;
   cursor: pointer;
-  transition: border-color .25s, transform .15s, box-shadow .25s;
+  transition: border-color .25s cubic-bezier(.4,0,.2,1), transform .2s cubic-bezier(.4,0,.2,1), box-shadow .25s;
   text-align: left;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.module-card::before {
+  content: attr(data-suit);
+  position: absolute;
+  right: -8px;
+  bottom: -24px;
+  font-size: 130px;
+  line-height: 1;
+  color: rgba(201,168,76,0.045);
+  pointer-events: none;
+  font-family: Georgia, serif;
+  user-select: none;
 }
 .module-card::after {
   content: '';
   position: absolute;
-  top: 0; right: 0;
-  width: 60px; height: 60px;
-  background: radial-gradient(circle at top right, rgba(201,168,76,0.06), transparent 70%);
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  background: linear-gradient(180deg, rgba(201,168,76,0.04) 0%, transparent 100%);
   pointer-events: none;
 }
 .module-card:hover {
-  border-color: var(--gold-muted);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(0,0,0,.5), 0 0 0 1px rgba(201,168,76,0.1);
+  border-color: rgba(201,168,76,0.55);
+  border-top-color: #e8c76a;
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0,0,0,.65), 0 0 0 1px rgba(201,168,76,0.12), 0 0 30px rgba(201,168,76,0.06);
 }
-.module-card .icon { font-size: 26px; margin-bottom: 10px; }
-.module-card h3 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; letter-spacing: 0.2px; }
-.module-card p { font-size: 13px; color: var(--muted); line-height: 1.5; }
-.module-card .badge {
-  display: inline-block;
-  margin-top: 10px;
+.module-card:hover::before { color: rgba(201,168,76,0.07); }
+.module-num {
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: 11px;
-  padding: 2px 8px;
+  font-weight: 700;
+  color: var(--gold-muted);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  opacity: 0.8;
+}
+.module-card h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 10px;
+  letter-spacing: 0.2px;
+  line-height: 1.2;
+}
+.module-card p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+  flex: 1;
+  margin: 0;
+}
+.module-cta {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.module-cta-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.module-cta-arrow {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.3);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold);
+  font-size: 14px;
+  transition: background .2s, border-color .2s, transform .2s;
+}
+.module-card:hover .module-cta-arrow {
+  background: rgba(201,168,76,0.12);
+  border-color: var(--gold);
+  transform: translateX(2px);
+}
+.module-card .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  font-size: 11px;
+  padding: 3px 10px;
   border-radius: 20px;
   background: var(--gold-dim);
   color: var(--gold-muted);
   border: 1px solid var(--border-gold);
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 .module-card .badge.done { background: #0d2818; color: var(--green-bright); border-color: #1a4a28; }
+
+/* ── HOW TO USE ── */
+.how-to-use {
+  display: flex;
+  gap: 0;
+  margin-top: 28px;
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.htu-step {
+  flex: 1;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-right: 1px solid rgba(201,168,76,0.1);
+  background: linear-gradient(160deg, rgba(12,30,16,0.8) 0%, rgba(6,9,9,0.5) 100%);
+}
+.htu-step:last-child { border-right: none; }
+.htu-num {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: rgba(201,168,76,0.25);
+  line-height: 1;
+}
+.htu-text {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+@media (max-width: 640px) {
+  .how-to-use { flex-direction: column; }
+  .htu-step { border-right: none; border-bottom: 1px solid rgba(201,168,76,0.1); }
+  .htu-step:last-child { border-bottom: none; }
+}
 
 /* ── CONTENT ── */
 h2 {
@@ -893,45 +999,80 @@ hr.gold { border-color: var(--border-gold); }
     <div style="display:flex;justify-content:center;gap:24px;font-size:28px;color:var(--border-gold);letter-spacing:4px;margin-top:4px">♠ ♥ ♦ ♣</div>
   </div>
   <div class="module-grid">
-    <div class="module-card" onclick="show('basics')">
-      <div class="icon">🎓</div>
-      <h3>1. The Basics</h3>
+    <div class="module-card" data-suit="♠" onclick="show('basics')">
+      <div class="module-num">Module 01</div>
+      <h3>The Basics</h3>
       <p>Hand rankings, table positions, and how betting rounds work.</p>
-      <div class="badge" id="badge-basics">Start →</div>
+      <div class="module-cta">
+        <span class="module-cta-label">Begin</span>
+        <span class="module-cta-arrow">→</span>
+      </div>
+      <div class="badge" id="badge-basics" style="display:none"></div>
     </div>
-    <div class="module-card" onclick="show('hands')">
-      <div class="icon">🃏</div>
-      <h3>2. Starting Hands</h3>
+    <div class="module-card" data-suit="♥" onclick="show('hands')">
+      <div class="module-num">Module 02</div>
+      <h3>Starting Hands</h3>
       <p>Which hands to play, fold, or raise — and why position changes everything.</p>
-      <div class="badge" id="badge-hands">Start →</div>
+      <div class="module-cta">
+        <span class="module-cta-label">Begin</span>
+        <span class="module-cta-arrow">→</span>
+      </div>
+      <div class="badge" id="badge-hands" style="display:none"></div>
     </div>
-    <div class="module-card" onclick="show('preflop')">
-      <div class="icon">⚡</div>
-      <h3>3. Pre-Flop Play</h3>
+    <div class="module-card" data-suit="♦" onclick="show('preflop')">
+      <div class="module-num">Module 03</div>
+      <h3>Pre-Flop Play</h3>
       <p>Raise sizes, 3-betting, when to call, and how to play the blinds.</p>
-      <div class="badge" id="badge-preflop">Start →</div>
+      <div class="module-cta">
+        <span class="module-cta-label">Begin</span>
+        <span class="module-cta-arrow">→</span>
+      </div>
+      <div class="badge" id="badge-preflop" style="display:none"></div>
     </div>
-    <div class="module-card" onclick="show('postflop')">
-      <div class="icon">📊</div>
-      <h3>4. Post-Flop</h3>
+    <div class="module-card" data-suit="♣" onclick="show('postflop')">
+      <div class="module-num">Module 04</div>
+      <h3>Post-Flop</h3>
       <p>Outs, pot odds, board texture, and when to bet, call, or fold.</p>
-      <div class="badge" id="badge-postflop">Start →</div>
+      <div class="module-cta">
+        <span class="module-cta-label">Begin</span>
+        <span class="module-cta-arrow">→</span>
+      </div>
+      <div class="badge" id="badge-postflop" style="display:none"></div>
     </div>
-    <div class="module-card" onclick="show('tournament')">
-      <div class="icon">🏆</div>
-      <h3>5. Tournaments</h3>
+    <div class="module-card" data-suit="♠" onclick="show('tournament')">
+      <div class="module-num">Module 05</div>
+      <h3>Tournaments</h3>
       <p>Stack sizes, push/fold, ICM, and adjusting your game late.</p>
-      <div class="badge" id="badge-tournament">Start →</div>
+      <div class="module-cta">
+        <span class="module-cta-label">Begin</span>
+        <span class="module-cta-arrow">→</span>
+      </div>
+      <div class="badge" id="badge-tournament" style="display:none"></div>
     </div>
-    <div class="module-card" onclick="show('drills')">
-      <div class="icon">🎯</div>
+    <div class="module-card" data-suit="⚡" onclick="show('drills')">
+      <div class="module-num">Drills</div>
       <h3>Mixed Drills</h3>
-      <p>Test your decision-making across all situations.</p>
-      <div class="badge" id="badge-drills">Start →</div>
+      <p>Test your decision-making across all situations once you're ready.</p>
+      <div class="module-cta">
+        <span class="module-cta-label">Begin</span>
+        <span class="module-cta-arrow">→</span>
+      </div>
+      <div class="badge" id="badge-drills" style="display:none"></div>
     </div>
   </div>
-  <div class="callout tip" style="margin-top:24px">
-    <strong>How to use this:</strong> Work through the modules in order. Each one ends with a quiz — get through that before moving on. The Drills section mixes everything together once you're ready.
+  <div class="how-to-use">
+    <div class="htu-step">
+      <span class="htu-num">01</span>
+      <span class="htu-text">Work through the modules in order</span>
+    </div>
+    <div class="htu-step">
+      <span class="htu-num">02</span>
+      <span class="htu-text">Complete each quiz before moving on</span>
+    </div>
+    <div class="htu-step">
+      <span class="htu-num">03</span>
+      <span class="htu-text">Hit Drills once you've covered the basics</span>
+    </div>
   </div>
 </div>
 
@@ -2641,11 +2782,17 @@ function showResult(moduleId) {
     </div>
   `;
 
-  // Update badge on home
+  // Update cta label and badge on home card when quiz completed
   const badge = document.getElementById(`badge-${moduleId}`);
   if (badge && pct >= 60) {
     badge.textContent = `✓ ${pct}%`;
     badge.classList.add('done');
+    badge.style.display = 'inline-flex';
+    const card = badge.closest('.module-card');
+    if (card) {
+      const lbl = card.querySelector('.module-cta-label');
+      if (lbl) lbl.textContent = 'Review';
+    }
   }
 }
 
