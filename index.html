@@ -774,6 +774,16 @@ hr.gold { border-color: var(--border-gold); }
   .poker-table { width: 280px; height: 176px; }
 }
 </style>
+  <script async defer src='https://app.visitortracking.com/assets/js/tracer.js'></script>
+  <script>
+  function init_tracer() {
+    var tracer = new Tracer({
+      websiteId : "7397c7e3-9c2e-49c3-80b9-081da3b8e913",
+      async : true,
+      debug : false
+    });
+  }
+  </script>
 </head>
 <body>
 
@@ -1634,35 +1644,105 @@ const quizData = {
       context: 'Player A has A♠A♦K♠K♦9♣ (two pair, Aces and Kings). Player B has J♣J♥J♦Q♠4♣ (three of a kind, Jacks). Who wins?',
       opts: ['Player A — two pair with Aces', 'Player B — three Jacks', 'Split pot', 'Highest card wins'],
       ans: 1,
-      exp: '<strong>Three of a kind always beats two pair</strong>, regardless of the card values. Player B\'s three Jacks win, even though Player A has a more impressive-sounding "Aces and Kings".'
+      exp: '<strong>Three of a kind always beats two pair</strong>, regardless of card values. Player B\'s three Jacks win, even though Player A has a more impressive-sounding "Aces and Kings".'
     },
     {
       label: 'Hand Rankings',
       q: 'You hold 9♦T♦ and the board is J♦Q♦K♦A♦2♠. What do you have?',
       opts: ['A straight', 'A flush', 'A straight flush', 'A royal flush'],
       ans: 2,
-      exp: '<strong>9-T-J-Q-K of diamonds = straight flush!</strong> Five consecutive cards of the same suit. This beats a regular straight (not same suit) and a regular flush (not consecutive). A royal flush would require A-K-Q-J-T of the same suit.'
+      exp: '<strong>9-T-J-Q-K of diamonds = straight flush!</strong> Five consecutive cards of the same suit. A royal flush requires A-K-Q-J-T of the same suit — your 9 is too low.'
     },
     {
       label: 'Positions',
       q: 'You\'re on the Button (BTN). Why is this the best position post-flop?',
       opts: ['You act first, so you set the tempo', 'You act last, so you see everyone else\'s decision first', 'You pay the blind, giving you better pot odds', 'You\'re closest to the dealer'],
       ans: 1,
-      exp: '<strong>Acting last is the most powerful advantage in poker.</strong> You see every check, bet, and fold before you decide. This information lets you bluff when the table is weak, value bet when you\'re ahead, and fold cheaply when you\'re behind.'
+      exp: '<strong>Acting last is the most powerful advantage in poker.</strong> You see every check, bet, and fold before you decide. This lets you bluff when the table is weak, value bet when you\'re ahead, and fold cheaply when you\'re behind.'
     },
     {
       label: 'Betting Rounds',
       q: 'Pre-flop, you raise. The flop comes. Who acts first post-flop?',
-      opts: ['The raiser always acts first', 'The player with the best hand acts first', 'The first active player clockwise from the dealer (SB/BB position)', 'The last one to bet pre-flop'],
+      opts: ['The raiser always acts first', 'The player with the best hand', 'The first active player clockwise from the dealer (SB position)', 'The last one to bet pre-flop'],
       ans: 2,
-      exp: '<strong>Post-flop, the Small Blind (or next active player clockwise from the dealer) always acts first</strong> — this never changes. This is why being in the blinds is tricky: you act first on every post-flop street, regardless of what happened pre-flop.'
+      exp: '<strong>Post-flop, the Small Blind (or next active player clockwise from the dealer) always acts first.</strong> This is why being in the blinds is tricky — you act first on every post-flop street regardless of what happened pre-flop.'
     },
     {
       label: 'Hand Rankings',
       q: 'You have K♠K♥. Board: K♦K♣A♠J♦2♥. What\'s your best 5-card hand?',
       opts: ['Two pair: Kings and Aces', 'Three of a kind: Kings', 'Full house: Kings full of Aces', 'Four of a Kind: Kings'],
       ans: 3,
-      exp: '<strong>Four of a Kind (quad Kings)</strong> — you have K♠K♥ in your hand plus K♦K♣ on the board. That\'s all four Kings. Your best 5-card hand is K♠K♥K♦K♣A♠. This beats any full house, any flush, or any straight your opponent might have.'
+      exp: '<strong>Four of a Kind (quad Kings).</strong> You have K♠K♥ in hand plus K♦K♣ on the board — all four Kings. Best 5-card hand is K♠K♥K♦K♣A♠. This beats any full house, flush, or straight.'
+    },
+    {
+      label: 'Hand Rankings',
+      q: 'Does a full house beat a flush?',
+      opts: ['No — a flush is harder to make', 'Yes — full house ranks above flush', 'They\'re equal', 'It depends on the cards'],
+      ans: 1,
+      exp: '<strong>Yes — a full house always beats a flush.</strong> The full ranking: Royal Flush > Straight Flush > Four of a Kind > Full House > Flush > Straight > Three of a Kind > Two Pair > One Pair > High Card.'
+    },
+    {
+      label: 'Hand Rankings',
+      q: 'Both players have a flush. Player A has A♠T♠8♠5♠3♠. Player B has K♦Q♦J♦9♦6♦. Who wins?',
+      opts: ['Player A — Ace-high flush wins', 'Player B — more face cards wins', 'Split pot — both have flushes', 'Whoever has more cards of their suit'],
+      ans: 0,
+      exp: '<strong>Player A wins with the Ace-high flush.</strong> When two players have a flush, the highest card decides. Player A has an Ace; Player B only has a King. Card values matter within the same hand type.'
+    },
+    {
+      label: 'Kicker',
+      q: 'Both players have a pair of Aces. Player A: A♠A♦K♥7♣2♠. Player B: A♣A♥Q♠9♦4♦. Who wins?',
+      opts: ['Split pot — both have Aces', 'Player A — King kicker wins', 'Player B — more cards contribute', 'Whoever holds the Ace of Spades'],
+      ans: 1,
+      exp: '<strong>Player A wins with the King kicker.</strong> When both players have the same pair, the next highest card (the "kicker") decides. A-A-K beats A-A-Q. This is why "dominated hands" like K8 vs KQ are dangerous — you can both pair the King but lose to the better kicker.'
+    },
+    {
+      label: 'Hand Rankings',
+      q: 'The board is A♠A♦A♣A♥K♠. You hold Q♠J♦. Your opponent holds 9♣8♦. Who wins?',
+      opts: ['You win — QJ is higher than 98', 'Your opponent wins', 'Split pot — everyone plays the board', 'Whoever has the best kicker with the Aces'],
+      ans: 2,
+      exp: '<strong>Split pot.</strong> The best 5-card hand is on the board itself: four Aces plus the King. Both players use A-A-A-A-K as their best hand. Neither your QJ nor their 98 beats the King on the board — the pot is split equally.'
+    },
+    {
+      label: 'Basics',
+      q: 'What does it mean to "check"?',
+      opts: ['Fold your hand without paying', 'Bet the minimum amount', 'Pass action without betting (only when no bet has been made)', 'Call the current bet'],
+      ans: 2,
+      exp: '<strong>Checking means passing action without betting.</strong> You can only check when no bet has been made yet in that round. Once someone bets, you must call, raise, or fold.'
+    },
+    {
+      label: 'Blind Structure',
+      q: 'The Small Blind sits directly to the left of the dealer. Who sits directly to the left of the Small Blind?',
+      opts: ['UTG (Under the Gun)', 'The Big Blind', 'The Cutoff', 'The Hijack'],
+      ans: 1,
+      exp: '<strong>The Big Blind sits directly to the left of the Small Blind.</strong> Order clockwise from the dealer: BTN (dealer) → SB → BB → UTG → HJ → CO. Post-flop, SB acts first since they\'re first clockwise from the dealer who acts last.'
+    },
+    {
+      label: 'Community Cards',
+      q: 'How many community cards are dealt in total over the course of a hand?',
+      opts: ['3 (the flop only)', '4 (flop + turn)', '5 (flop + turn + river)', '7 (hole cards + community)'],
+      ans: 2,
+      exp: '<strong>5 community cards: 3 on the flop, 1 on the turn, 1 on the river.</strong> You use your 2 hole cards plus any combination of the 5 community cards to make the best 5-card hand. You can even play the board (use none of your hole cards).'
+    },
+    {
+      label: 'Positions',
+      q: 'You\'re in the Hijack (HJ). How many players act after you pre-flop?',
+      opts: ['1 (just the BTN)', '2 (CO and BTN)', '3 (CO, BTN, and one blind)', '4 (CO, BTN, SB, and BB)'],
+      ans: 3,
+      exp: '<strong>4 players act after you: CO, BTN, SB, and BB.</strong> HJ → CO → BTN → SB → BB. The HJ is a mid-position seat — you need a stronger range here than from the CO or BTN, where far fewer players remain.'
+    },
+    {
+      label: 'Pot Odds',
+      q: 'Pot is 400. Opponent bets 400 (pot-sized). What equity do you need to call?',
+      opts: ['50%', '33%', '25%', '40%'],
+      ans: 1,
+      exp: '<strong>33% equity needed to call a pot-sized bet.</strong> You call 400 into a total pot of 1,200 (400 original + 400 bet + 400 your call). 400 ÷ 1,200 = 33%. Rule of thumb: a pot-sized bet always requires roughly 33% equity to break even.'
+    },
+    {
+      label: 'Hand Rankings',
+      q: 'You have 5♠6♠7♠8♠9♠. Your opponent has A♦A♣A♥A♠K♦. Who wins?',
+      opts: ['Your opponent — four Aces beats anything', 'You — straight flush beats four of a kind', 'Split pot', 'Whoever has the Ace of Spades'],
+      ans: 1,
+      exp: '<strong>You win — straight flush beats four of a kind.</strong> Rankings: Royal Flush > Straight Flush > Four of a Kind. Your 5-6-7-8-9 of spades beats four Aces every time. Only another straight flush or royal flush can beat it.'
     }
   ],
 
@@ -1672,35 +1752,105 @@ const quizData = {
       q: 'You\'re UTG (first to act) with J♦9♦. What do you do?',
       opts: ['Limp in — it\'s a suited connector', 'Raise 3x BB', 'Fold', 'Call the big blind'],
       ans: 2,
-      exp: '<strong>Fold J9s from UTG.</strong> Suited connectors need position to be profitable. From UTG, you\'ll be out of position against most opponents post-flop, and J9 is too weak to open from early position. Save it for the CO or BTN.'
+      exp: '<strong>Fold J9s from UTG.</strong> Suited connectors need position to be profitable. From UTG, you\'ll be out of position against most players post-flop. J9 is too weak to open from early position — save it for the CO or BTN.'
     },
     {
       label: 'Starting Hands',
-      q: 'You\'re on the BTN (Button) with 7♣7♦. Everyone folds to you. What do you do?',
+      q: 'You\'re on the BTN with 7♣7♦. Everyone folds to you. What do you do?',
       opts: ['Fold — small pairs are dangerous', 'Limp in', 'Raise 2.5x BB', 'Only play if you flop a set'],
       ans: 2,
-      exp: '<strong>Raise with 77 on the BTN.</strong> You have position, a decent hand, and only two players left (SB and BB) who can contest the pot. Even if called, you\'re in position and 77 has decent equity. Set-mining potential is a bonus, not the only reason to play it.'
+      exp: '<strong>Raise with 77 on the BTN.</strong> You have position, a decent hand, and only two players left (SB and BB). Even if called, you\'re in position with a hand that has real equity. Set-mining is a bonus, not the main reason to play it.'
     },
     {
       label: 'Dominated Hands',
       q: 'UTG raises. You have K♠8♦ on the BTN. What do you do?',
       opts: ['Call — you have King-high and position', 'Raise — punish the UTG raiser', 'Fold — K8o is dominated', 'Check'],
       ans: 2,
-      exp: '<strong>Fold K8o.</strong> UTG raises represent a tight range: AK, AQ, KQ, KJ, QQ+. If a King flops, your K8 will often make second-best hand against KQ or KJ and lose a big pot. K8 is dominated and should be folded, even with position.'
+      exp: '<strong>Fold K8o.</strong> UTG raises represent a tight range: AK, AQ, KQ, KJ, QQ+. If a King flops, your K8 will often be second-best against KQ or KJ and lose a big pot. K8 is dominated — fold even with position.'
     },
     {
       label: 'Premium Hands',
       q: 'You\'re UTG with A♠A♦. You raise to 3x BB. The BTN 3-bets you. What do you do?',
       opts: ['Fold — they have a strong hand too', 'Call and see the flop', '4-bet (re-raise)', 'Go all-in immediately'],
       ans: 2,
-      exp: '<strong>4-bet with Aces.</strong> AA is the best hand in poker. You want to build the pot pre-flop. Calling is fine too, but 4-betting extracts value and potentially gets stacks in pre-flop against KK/QQ. Going all-in is also correct — never slow-play Aces pre-flop against a 3-bet.'
+      exp: '<strong>4-bet with Aces.</strong> AA is the best hand in poker — build the pot. 4-betting extracts value and can get stacks in against KK or QQ. Going all-in directly is also correct. Never slow-play Aces pre-flop against a 3-bet.'
     },
     {
       label: 'Starting Hands',
       q: 'You\'re in the BB. Everyone folds to the SB who limps. You have Q♣4♦. What do you do?',
       opts: ['Fold — Q4 is a bad hand', 'Check — take the free flop', 'Raise — punish the limp', 'Go all-in'],
       ans: 1,
-      exp: '<strong>Check is the correct play.</strong> The SB limped and you can see the flop for free. Even with a weak hand like Q4, you should take the free look — you might flop something. Folding is wrong (it\'s free!). Raising is okay occasionally as a semi-bluff but checking is standard.'
+      exp: '<strong>Check — take the free flop.</strong> The SB limped and you can see the flop for free. Even with Q4, you should look. Folding is wrong (it\'s free!). Raising occasionally as a semi-bluff is fine, but checking is standard.'
+    },
+    {
+      label: 'Starting Hands',
+      q: 'You\'re UTG with A♣K♠. What do you do?',
+      opts: ['Limp — no need to raise from early position', 'Raise 3x BB', 'Fold — AKo plays badly multiway', 'Raise only if suited'],
+      ans: 1,
+      exp: '<strong>Raise with AKo from any position.</strong> AK (suited or not) is a premium hand — always raise. Limping gives away information and lets everyone in cheap. Raise it from UTG, raise it from the BTN, always raise it.'
+    },
+    {
+      label: 'Pocket Pairs',
+      q: 'You\'re UTG with 2♥2♦. What do you do?',
+      opts: ['Raise — it\'s a pair', 'Limp to see a cheap flop', 'Fold', 'Call if someone limped already'],
+      ans: 2,
+      exp: '<strong>Fold 22 from UTG.</strong> Small pairs need implied odds — you\'re hoping to flop a set (only 12% chance). From UTG, you\'ll be out of position post-flop. Even if you hit a set, the implied odds aren\'t great against a full table. Fold 22-44 from early position.'
+    },
+    {
+      label: 'Suited Aces',
+      q: 'You\'re on the BTN. Everyone folds to you. You have A♦2♦. What do you do?',
+      opts: ['Fold — A2 is too weak', 'Limp in', 'Raise', 'Only play if very deep-stacked'],
+      ans: 2,
+      exp: '<strong>Raise A2s on the BTN.</strong> A2s has real value: an Ace blocker, nut flush draw potential, and you\'re in position against just two players. This is a standard BTN open. From early position, fold. From late position, raise.'
+    },
+    {
+      label: 'Starting Hands',
+      q: 'You have T♠8♠ in the HJ. What do you do?',
+      opts: ['Raise — suited connectors always raise', 'Call if someone limped', 'Fold — T8s needs later position', 'Limp to see a cheap flop'],
+      ans: 2,
+      exp: '<strong>Fold T8s from HJ.</strong> Suited connectors need position to be profitable. From HJ, with CO, BTN, SB and BB still to act behind you, a hand like T8s will often be out of position post-flop. Save suited connectors below JTs for the CO or BTN.'
+    },
+    {
+      label: 'Starting Hands',
+      q: 'You\'re on the BTN with Q♣J♣. CO raised. What do you do?',
+      opts: ['Fold — QJs is too weak vs a raiser', 'Call — position and a strong hand', '3-bet — QJs is a premium hand', 'Both call and 3-bet are fine'],
+      ans: 3,
+      exp: '<strong>Call or 3-bet with QJs on the BTN — both are correct.</strong> QJs is a strong hand that plays well in position. Calling keeps the pot smaller and lets you use your drawing potential. 3-betting builds the pot and takes initiative. Never fold QJs on the BTN facing a CO raise.'
+    },
+    {
+      label: 'Pocket Pairs vs Raise',
+      q: 'You\'re on the BTN with 3♣3♦. CO raises. What\'s your plan?',
+      opts: ['Fold — small pairs don\'t play well vs raises', 'Call to set-mine if stacks are deep enough', '3-bet — pairs always 3-bet', 'Shove all-in'],
+      ans: 1,
+      exp: '<strong>Call to set-mine — but only with deep enough stacks.</strong> 33 hits a set ~12% of the time (about 7.5:1 odds). You need to win roughly 7.5x your call when you hit. Against a 3x BB raise, you need ~22+ BB behind to make set-mining profitable. If stacks are deep enough, call. If not, fold.'
+    },
+    {
+      label: 'Suited Connectors + Limpers',
+      q: 'You have 6♠7♠ on the BTN. 4 players limp. What do you do?',
+      opts: ['Limp along — see a cheap multiway flop', 'Raise large to punish the limpers', 'Fold — too many opponents', 'Raise small'],
+      ans: 1,
+      exp: '<strong>Raise large (~6x BB).</strong> You\'re on the BTN with 67s and 4 limpers. You have position and a hand with great drawing potential. Even if 2-3 players call, you have the best seat at the table. Never limp along on the BTN with a hand worth playing.'
+    },
+    {
+      label: 'Facing a Raise — AJo',
+      q: 'UTG raises. You have A♠J♦ in the CO. What do you do?',
+      opts: ['Fold — AJo is dominated by UTG\'s range', 'Call', '3-bet', 'Fold or 3-bet — never flat call'],
+      ans: 3,
+      exp: '<strong>Fold or 3-bet with AJo vs a UTG raise — avoid flat calling.</strong> UTG raises AK and AQ, which both dominate AJ. Flat calling is the worst option. If you play it, 3-bet to isolate or fold. Many strong players simply fold AJo to a UTG raise.'
+    },
+    {
+      label: 'Early Position',
+      q: 'You have K♦J♠ in UTG+1. What do you do?',
+      opts: ['Raise — KJo is a strong hand', 'Limp', 'Fold', 'Raise only if it folds to you'],
+      ans: 2,
+      exp: '<strong>Fold KJo from early position.</strong> KJo looks nice but plays badly from UTG+1. Against any Ace (dominated), against KQ or KA (dominated). A King on the board can cost you a big pot. KJo is a late-position hand — open it from CO/BTN, fold it from early position.'
+    },
+    {
+      label: 'Late Position Open',
+      q: 'You have 9♦8♦ on the BTN. Both blinds are loose-passive. Everyone else folds. What do you do?',
+      opts: ['Fold — 98s isn\'t premium', 'Limp to see a cheap flop', 'Raise 2.5x BB', 'Raise 4x BB'],
+      ans: 2,
+      exp: '<strong>Raise 2.5x BB.</strong> 98s is a solid BTN open, especially against loose-passive players who won\'t 3-bet much. You have position, and a suited connector with great drawing potential. Standard raise, take the pot if they fold, or play your drawing hand in position.'
     }
   ],
 
@@ -1710,42 +1860,140 @@ const quizData = {
       q: 'Blinds are 200/400. You want to open-raise from the CO. What\'s the correct amount?',
       opts: ['400 (min-raise)', '600 (1.5x)', '1,000 (2.5x)', '2,000 (5x)'],
       ans: 2,
-      exp: '<strong>1,000 chips (2.5x the BB).</strong> Standard open is 2.5x. Min-raising (2x) gives too-good odds to callers and lets everyone in cheap. 5x is too large — you only get called by hands that beat you and fold everything you dominate.'
+      exp: '<strong>1,000 chips (2.5x the BB).</strong> Standard open is 2.5x. Min-raising gives too-good odds to callers. 5x is too large — you only get called by hands that beat you and fold everything you dominate.'
     },
     {
       label: '3-Betting',
       q: 'A player opens to 900 (2.25x, blinds 200/400). You have QQ on the BTN. What do you do?',
       opts: ['Call and see the flop', '3-bet to 2,700', '3-bet to 4,000', 'Fold — could be up against KK or AA'],
       ans: 1,
-      exp: '<strong>3-bet to 2,700 (3x the open).</strong> QQ is a premium hand that plays best by building the pot and narrowing the field. 3-betting in position is ideal. 4,000 is too large. Calling is fine too, but 3-betting extracts more value and gives you the initiative on the flop.'
+      exp: '<strong>3-bet to 2,700 (3x the open).</strong> QQ is a premium hand — build the pot and narrow the field. 3-betting in position is ideal. Calling is fine too, but 3-betting extracts more value and gives you initiative on the flop.'
     },
     {
       label: 'Facing a 3-bet',
       q: 'You raised with JJ. A tight UTG player 3-bets you. What do you do?',
       opts: ['4-bet all-in — JJ is a premium hand', 'Call and see the flop', 'Fold — tight players only 3-bet QQ+', 'Fold or call, never 4-bet'],
       ans: 3,
-      exp: '<strong>Call or fold, but avoid 4-betting JJ vs a tight UTG 3-bet.</strong> A tight player\'s 3-bet range from UTG is typically QQ, KK, AA — hands that dominate JJ. Calling to set-mine is reasonable. 4-betting commits you against hands you\'re badly behind against. If very tight player: fold is fine. Average player: call.'
+      exp: '<strong>Call or fold, but don\'t 4-bet JJ vs a tight UTG 3-bet.</strong> A tight player\'s UTG 3-bet range is typically QQ, KK, AA — all of which dominate JJ. Calling to see a flop is reasonable. 4-betting commits your stack against hands you\'re badly behind. Very tight player: fold. Average player: call.'
     },
     {
       label: 'Small Blind',
       q: 'It\'s folded to you in the SB. You have A♦7♠. What\'s the best approach?',
       opts: ['Limp — no need to raise with A7o', 'Raise 3x BB', 'Fold', 'Raise or fold, never limp'],
       ans: 3,
-      exp: '<strong>Raise or fold from the SB — never limp.</strong> A7o is borderline. From SB, you can raise it to steal the BB or fold and preserve chips. Limping is bad because you go post-flop out of position with a mediocre hand and a pot you don\'t control. With A7o specifically: raise is fine, fold is fine, limp is not.'
+      exp: '<strong>Raise or fold from the SB — never limp.</strong> Limping is bad because you go post-flop out of position with a mediocre hand and a pot you don\'t control. With A7o: raising is fine, folding is fine, limping is not.'
     },
     {
-      label: 'Big Blind',
-      q: 'Blinds 300/600. CO raises to 1,500. You\'re in the BB with K♦9♦. You need to call 900 more. The pot is 1,800 if you call. What do you do?',
-      opts: ['Fold — K9 is too weak to play OOP', 'Call — suited and getting good odds', 'Raise — semi-bluff your strong draw potential', 'Limp and see the flop'],
+      label: 'Big Blind Defense',
+      q: 'Blinds 300/600. CO raises to 1,500. You\'re in the BB with K♦9♦. You need to call 900 more. What do you do?',
+      opts: ['Fold — K9 is too weak to play OOP', 'Call — suited and getting good odds', '3-bet as a semi-bluff', 'Fold to avoid difficult post-flop spots'],
       ans: 1,
-      exp: '<strong>Calling is fine here.</strong> K9s is a decent hand, you\'re getting 2:1 pot odds (call 900 into a 1,800 pot = 33% equity needed), and K9 suited has decent playability. You could also 3-bet as a semi-bluff. What you don\'t do is fold — K9s from the BB facing a CO raise is a standard defend.'
+      exp: '<strong>Call is correct here.</strong> K9s is a decent hand and you\'re getting good pot odds — calling ~900 into a pot with 2,400 already in it. K9 suited has solid playability. You could also 3-bet as a semi-bluff. Folding is the wrong play — K9s from the BB vs a CO raise is a standard defend.'
     },
     {
       label: 'Reading Limpers',
       q: '3 players limp. You\'re on the BTN with A♠K♦. What do you do?',
-      opts: ['Limp along — no need to raise into 3 players', 'Raise large — 5–6x BB to punish the limpers', 'Fold — too many opponents', 'Raise the standard 2.5x'],
+      opts: ['Limp along — no need to raise into 3 players', 'Raise large — 5-6x BB to punish the limpers', 'Fold — too many opponents', 'Raise the standard 2.5x'],
       ans: 1,
-      exp: '<strong>Raise large — 5–6x BB (or more) when there are multiple limpers.</strong> AKo is a premium hand. Limping lets everyone in cheap and makes the pot multiway and unpredictable. Raise to isolate and build the pot. The more limpers, the bigger your raise should be.'
+      exp: '<strong>Raise large — 5-6x BB when there are multiple limpers.</strong> AKo is a premium hand. Limping lets everyone in cheap and makes the pot unpredictable. Raise enough to thin the field. The more limpers, the bigger your raise.'
+    },
+    {
+      label: '3-bet Sizing',
+      q: 'A player opens to 600 (3x BB, blinds 100/200). You\'re on the BTN and want to 3-bet. What\'s a good size?',
+      opts: ['900 (1.5x the open)', '1,200 (2x the open)', '1,800 (3x the open)', '3,000 (5x the open)'],
+      ans: 2,
+      exp: '<strong>1,800 (3x the open) is standard in position.</strong> Rule of thumb: 3x the open when in position, 4x when out of position (from the blinds). Too small and they call too easily; too large and you only get called by hands that crush you.'
+    },
+    {
+      label: 'Facing a 4-bet',
+      q: 'You 3-bet with K♣K♦. Your opponent 4-bets you. What do you do?',
+      opts: ['Fold — they might have Aces', 'Call and play post-flop carefully', 'Shove all-in', 'Call if they seem tilted, fold otherwise'],
+      ans: 2,
+      exp: '<strong>Get the money in with KK — shove or call the 4-bet.</strong> KK loses to AA, but against a 4-bet range that includes AK, QQ, and bluffs, you\'re a huge favourite. Folding KK pre-flop is almost always a mistake at friendly tournaments.'
+    },
+    {
+      label: 'Squeeze Play',
+      q: 'UTG raises. Two players call (CO and BTN). You\'re in the SB with A♦K♣. What do you do?',
+      opts: ['Call — 3 opponents is too many to raise into', 'Fold — too much action', '3-bet (squeeze) large — AK is strong and callers are likely weak', 'Limp in'],
+      ans: 2,
+      exp: '<strong>Squeeze (3-bet) large with AKo.</strong> When one player raises and others flat call, a big 3-bet "squeezes" the callers out — they almost certainly don\'t have premium hands (they\'d have 3-bet themselves). Size the squeeze at 4-5x the original raise. Squeezes are one of the highest-EV plays in poker.'
+    },
+    {
+      label: 'AK vs a Pair',
+      q: 'You\'re all-in pre-flop with A♠K♦ vs Q♥Q♠. Are you happy with this situation?',
+      opts: ['No — you have no pair, they have a pair', 'Yes — AK is a strong favourite', 'It\'s a coin flip — roughly 50/50', 'Only if your Ace and King are suited'],
+      ans: 2,
+      exp: '<strong>It\'s a coin flip — AK vs QQ is almost exactly 50/50.</strong> AK is about 46% (QQ wins ~54%). This is called a "race." Getting your chips in with AK vs QQ is not bad poker — it\'s a near-even gamble. Against AA or KK you\'re a big underdog, but against QQ it\'s a flip you\'ll happily take all day.'
+    },
+    {
+      label: 'TT Facing a Raise',
+      q: 'You\'re on the BTN with T♠T♦. UTG raises. What\'s the best play?',
+      opts: ['Fold — TT is vulnerable', 'Call and play post-flop in position', '3-bet to narrow the field', 'Both call and 3-bet are valid'],
+      ans: 3,
+      exp: '<strong>Both calling and 3-betting TT vs a UTG raise are correct.</strong> 3-betting builds the pot in position and lets you fold to a 4-bet. Calling is fine too, especially vs a tight UTG opener. TT is a call-or-3-bet hand — the choice depends on the specific opponent and stack depth.'
+    },
+    {
+      label: '3-bet Bluffing',
+      q: 'CO raises. You\'re on the BTN with A♠5♠. What can you do?',
+      opts: ['Fold — A5s is too weak to 3-bet', 'Call only — suited Ace needs to see a flop', '3-bet as a semi-bluff', 'Both call and 3-bet are good here'],
+      ans: 3,
+      exp: '<strong>A5s is excellent for both calling and 3-betting.</strong> As a 3-bet: A5s blocks AA (you hold an Ace) and has great equity when called — nut flush draw, straight potential. As a call: position + suited Ace is plenty. A5s is one of the best 3-bet bluff candidates in poker.'
+    },
+    {
+      label: 'BB vs SB',
+      q: 'It\'s folded to the SB who raises. You\'re in the BB with J♠7♣. What do you do?',
+      opts: ['Fold — J7o is trash', 'Call — already invested and getting a discount', '3-bet — punish their wide steal range', 'Call or fold depending on the player'],
+      ans: 3,
+      exp: '<strong>Call or fold — J7o is marginal.</strong> The SB steals wide, so you get a discount to call. J7o has some playability heads-up but you\'re out of position post-flop. Against a very wide stealer: call. Against a tighter player: fold. J7o is too weak to 3-bet for value.'
+    },
+    {
+      label: 'Antes Change Things',
+      q: 'Blinds are 200/400 with antes adding up to 400 more per orbit. How does this change your opening strategy?',
+      opts: ['No change — antes don\'t affect pre-flop decisions', 'Open tighter — pot is bigger, more pressure', 'Open wider — stealing is more valuable with dead money', 'Ante games require limping more'],
+      ans: 2,
+      exp: '<strong>Open wider when antes are in play.</strong> Antes add significant dead money to every pot. With 400 in antes plus 600 in blinds = 1,000 already in, a 1,000 open risks 1,000 to win 2,000 — excellent steal odds. Ante games reward aggression. Your open frequency should increase noticeably.'
+    },
+    {
+      label: 'Facing a Min-Raise',
+      q: 'Blinds 100/200. Someone min-raises to 400. You\'re in position with 6♣7♣. What do you do?',
+      opts: ['Fold — not worth playing', 'Call — cheap and in position', '3-bet — punish the weak raise', 'All three can work depending on context'],
+      ans: 3,
+      exp: '<strong>All three have merit.</strong> A min-raise gives excellent pot odds to call with a speculative hand like 67s. 3-betting as a bluff is also fine — min-raisers often have medium-strength hands. Folding is rarely correct given how cheap the price is. The best play depends on the specific opponent.'
+    },
+    {
+      label: 'Calling a Shove',
+      q: 'You\'re in the BB with A♥Q♠ (30 BB stack). CO shoves for 22 BB. Everyone folds to you. What do you do?',
+      opts: ['Fold — AQo isn\'t a calling hand vs a shove', 'Call — AQo is ahead of a typical 22 BB shove range', 'Fold to preserve your stack', 'It\'s too close to call'],
+      ans: 1,
+      exp: '<strong>Call with AQo vs a 22 BB CO shove.</strong> A 22 BB shove from CO is wide — any Ace, any King, pairs 55+. AQo dominates AJ, AT, KQ, KJ and races pairs. At 30 BB, this is a clear call. You\'re getting solid pot odds and your hand is ahead of most shove ranges.'
+    },
+    {
+      label: 'Re-steal',
+      q: 'You\'re in the SB with 18 BB. BTN raises (they\'ve been stealing frequently). You have K♣9♠. What do you do?',
+      opts: ['Fold — K9o isn\'t strong enough', 'Call and play post-flop', 'Shove all-in (re-steal)', 'Raise small'],
+      ans: 2,
+      exp: '<strong>Shove over the BTN steal (re-steal).</strong> K9o from the SB vs a frequent stealer is a shove spot. At 18 BB, shoving applies maximum pressure — they must risk chips calling with a wide range. K9 has decent equity when called, and frequent stealers fold often enough to make this profitable.'
+    },
+    {
+      label: 'BB Defense Width',
+      q: 'BTN raises to 2.5x. You\'re in the BB with 9♣8♣. You need to call 1.5 BB more. What do you do?',
+      opts: ['Fold — you\'re out of position', 'Call — good pot odds and 98s plays well', '3-bet as a bluff', 'Fold most hands OOP from the BB'],
+      ans: 1,
+      exp: '<strong>Call easily.</strong> You\'re getting over 2:1 pot odds and only need about 30% equity. 98s has that even out of position vs the BTN\'s wide opening range. The BB should be defending ~35-40% of hands vs a BTN raise — suited connectors like 98s are an automatic call.'
+    },
+    {
+      label: 'Cold 4-bet',
+      q: 'UTG raises. CO 3-bets. You\'re on the BTN with A♦A♠. What do you do?',
+      opts: ['Call — don\'t scare them off', '4-bet (re-raise again)', 'Fold — too much action', 'Just call the original raise'],
+      ans: 1,
+      exp: '<strong>4-bet with Aces.</strong> You have the best hand in poker and two players already have money in. 4-betting builds the pot massively and gets stacks in against KK and AK. Don\'t flat call into a 3-bet — you\'ll play a bloated multiway pot when you want heads-up action. 4-bet every time.'
+    },
+    {
+      label: 'Folding Discipline',
+      q: 'You\'ve been card-dead for 40 minutes. You\'re dealt K♦6♣ in early position. What do you do?',
+      opts: ['Raise — you need to play hands', 'Limp — just see a cheap flop', 'Fold — K6o from early position is a clear fold', 'Call if someone limped'],
+      ans: 2,
+      exp: '<strong>Fold — boredom is a trap.</strong> K6o from early position is a clear fold regardless of how long you\'ve been waiting. The cards don\'t owe you a hand. Playing K6o from early position leads to dominated kicker situations and wasted chips. The discipline to fold bad hands is one of the most important skills in poker.'
     }
   ],
 
@@ -1755,42 +2003,133 @@ const quizData = {
       q: 'You have 8♥9♥. Flop: 6♦7♣K♠. How many outs to a straight?',
       opts: ['4 outs (gutshot)', '6 outs', '8 outs (OESD)', '10 outs'],
       ans: 2,
-      exp: '<strong>8 outs — open-ended straight draw (OESD).</strong> You need a 5 (four cards: 5♠5♦5♣5♥) to complete the low end, or a T (four cards: T♠T♦T♣T♥) to complete the high end. 4 + 4 = 8 outs. On the flop, that\'s roughly 8 × 4 = 32% chance to hit by the river.'
+      exp: '<strong>8 outs — open-ended straight draw (OESD).</strong> You need a 5 (four cards) for the low end, or a T (four cards) for the high end. 4 + 4 = 8 outs. On the flop, roughly 8 x 4 = 32% chance to hit by the river.'
     },
     {
       label: 'Pot Odds',
-      q: 'Pot is 300. Opponent bets 150. You have a flush draw (9 outs, ~18% to hit on the turn). Should you call?',
-      opts: ['Yes — flush draws always call', 'No — 18% equity is less than the 33% required', 'Yes — pot odds justify it', 'No — always fold draws'],
+      q: 'Pot is 300. Opponent bets 150. You have a flush draw (9 outs, ~18% to hit on the turn alone). Should you call?',
+      opts: ['Yes — flush draws always call', 'No — 18% doesn\'t meet the 33% equity required', 'Yes — pot odds justify it', 'No — always fold draws'],
       ans: 2,
-      exp: '<strong>No — you\'re not getting the right odds.</strong> Call 150 into 450 total = 33% equity needed. Your flush draw on the turn is ~18%. You don\'t have enough equity to call profitably based on pot odds alone. (Note: implied odds — potential future winnings — might still justify a call, but basic pot odds say fold.)'
+      exp: '<strong>No — not enough equity on the turn alone.</strong> Call 150 into 450 total = 33% equity needed. Your flush draw on the turn is ~18%. Pot odds alone don\'t justify it. However, implied odds (what you can win if you hit) might still make the call correct depending on stack depth and opponent tendencies.'
     },
     {
       label: 'Board Texture',
       q: 'You raised pre-flop with A♠K♣. Flop: A♥8♣3♦. One opponent checks to you. What do you do?',
       opts: ['Check behind — trap them', 'Bet 50% of the pot', 'Bet 100% of the pot', 'Fold — top pair is vulnerable'],
       ans: 1,
-      exp: '<strong>Bet 50% of the pot.</strong> You have top pair top kicker (TPTK) on a dry board — a very strong hand. Bet for value. Checking to "trap" is a mistake: there are no scary draws to worry about, and your opponent needs to put money in the pot to lose it to you. Bet ~50% pot to get called by weaker Aces, 8s, and 3s.'
+      exp: '<strong>Bet 50% pot.</strong> You have top pair top kicker (TPTK) on a dry board. Checking to trap is a mistake — there are no scary draws and your opponent needs to put money in to lose it to you. Bet ~50% pot to get called by weaker Aces, 8s, and 3s.'
     },
     {
-      label: 'Continuation Betting',
-      q: 'You raised pre-flop. Flop comes J♠T♠9♦ — a very wet, coordinated board. Opponent checks. You have A♦K♣ (no pair, no draw). What do you do?',
-      opts: ['Bet 75% pot — you have ace-high and raised', 'Check — this board missed you and hit callers', 'Bet small 25% pot', 'Go all-in to blow them off'],
+      label: 'C-bet Selection',
+      q: 'You raised pre-flop. Flop: J♠T♠9♦ — a wet, coordinated board. Opponent checks. You have A♦K♣ (no pair, no draw). What do you do?',
+      opts: ['Bet 75% pot — you have ace-high and raised pre-flop', 'Check — this board missed you and hit callers', 'Bet small 25% pot', 'Go all-in to blow them off'],
       ans: 1,
-      exp: '<strong>Check back.</strong> On a J-T-9 board, many hands connect — straights, two pairs, sets, flush draws. Your AK missed completely with no draw. Betting here is a bluff into a calling range that likely connected. Check, take the free card, and hope to hit an A or K on the turn.'
+      exp: '<strong>Check back.</strong> On J-T-9, many hands connected — straights, two pairs, sets, flush draws. Your AK missed completely. Betting here is bluffing into a range that almost certainly hit. Check, take the free card, and hope to hit an A or K on the turn.'
     },
     {
       label: 'Value Betting',
-      q: 'You have K♥K♦. Board: K♠7♦2♣4♠9♥ (rainbow, dry). Opponent checks river. You\'re IP. What do you do?',
-      opts: ['Check — no need to bet with a set', 'Bet small (25%) to get called', 'Bet big (75–100%) to extract maximum value', 'Go all-in'],
+      q: 'You have K♥K♦. Board: K♠7♦2♣4♠9♥ (rainbow, dry). Opponent checks river. You\'re in position. What do you do?',
+      opts: ['Check — no need to bet with a set', 'Bet small (25%) to get called', 'Bet big (75-100%) to extract maximum value', 'Go all-in'],
       ans: 2,
-      exp: '<strong>Bet big — 75% to 100% pot.</strong> You have top set (three Kings) on a dry board. This is one of the best hands possible. Your opponent has checked, meaning they likely have a pair or some showdown value. Bet large — they can\'t fold a pair of Nines easily. Extract maximum value from your monster.'
+      exp: '<strong>Bet big — 75-100% pot.</strong> You have top set on a dry board. Opponent checked, meaning they likely have a pair or some showdown value. Bet large — they can\'t fold a pair of Nines easily. Extract maximum value from your monster.'
     },
     {
-      label: 'Calling Decisions',
+      label: 'Overpair on Scary Board',
       q: 'You have 6♣6♦. Flop: A♠Q♣J♦. Opponent bets pot. What do you do?',
-      opts: ['Call — 66 is still a pair', 'Raise — they might be bluffing', 'Fold — you\'re likely beaten', 'Check'],
+      opts: ['Call — 66 is still a pair', 'Raise — they might be bluffing', 'Fold — three overcards plus a pot-sized bet', 'Check'],
       ans: 2,
-      exp: '<strong>Fold.</strong> On an A-Q-J board, you have a pair of Sixes with no draws and three overcards on the board. A pot-sized bet represents a strong hand. You\'re likely beaten by top pair or better, and you have very few outs (only two Sixes in the deck would help). This is a clear fold.'
+      exp: '<strong>Fold.</strong> On A-Q-J, you have a pair of Sixes with three overcards on the board. A pot-sized bet represents a strong hand. You have very few outs (just two Sixes left in the deck). Clear fold.'
+    },
+    {
+      label: 'C-bet on Dry Board',
+      q: 'You raised with AA. Flop: 2♠5♦8♣ (dry rainbow). Opponent checks. What do you do?',
+      opts: ['Check — let them catch up', 'Bet small (25-33% pot)', 'Bet large (75%+ pot)', 'Go all-in immediately'],
+      ans: 1,
+      exp: '<strong>Bet small (25-33% pot) on a dry, low board.</strong> On 2-5-8 rainbow, your range of strong pre-flop hands hits this board well and you can bet wide with low sizing. Small bets extract value from any pair and look like probing rather than strength — keeping more hands in.'
+    },
+    {
+      label: 'Check-Raise',
+      q: 'You have T♣T♦. Flop: T♠6♣2♦. You\'re out of position. Your opponent has been very aggressive. What do you do?',
+      opts: ['Bet out — don\'t give free cards', 'Check and fold if bet', 'Check intending to check-raise if they bet', 'Check-call and see the turn'],
+      ans: 2,
+      exp: '<strong>Check-raise with top set.</strong> On a dry board vs an aggressive opponent, checking and raising their c-bet is excellent. It builds the pot with your best hand, looks balanced, and extracts maximum value. Donk-betting (betting first out of position) often folds out their bluffs before they\'ve put money in.'
+    },
+    {
+      label: 'Turn Barrel',
+      q: 'You have A♠K♠. Flop: K♦7♠2♠ — you bet, they called. Turn: 3♣ (blank). They check. What do you do?',
+      opts: ['Check — don\'t bet twice', 'Bet 50-60% pot for value', 'Bet tiny to induce a raise', 'Check-raise if they bet'],
+      ans: 1,
+      exp: '<strong>Bet for value on the turn.</strong> You have top pair top kicker plus a flush draw. That\'s an extremely strong hand. The turn is a blank — bet again. They called the flop with something and you want to keep building the pot. You have too much equity to slow down.'
+    },
+    {
+      label: 'River Bluff',
+      q: 'You have Q♣J♣. Board: A♣K♠T♦2♥8♣. You have nothing (no pair, no draw). Opponent checks. You\'re in position. What do you do?',
+      opts: ['Check — take the free showdown', 'Bet large — represent the straight (A-K-Q-J-T)', 'Bet small as a block bet', 'Fold (you can\'t fold in position when checked to)'],
+      ans: 1,
+      exp: '<strong>Bet large, representing the straight.</strong> Q-J on an A-K-T board means you hold exactly the cards that complete the nut straight (A-K-Q-J-T). You have a "blocker bluff" — holding two of the straight cards makes it less likely your opponent also has the straight, and very credible that you do. Bet 75-100% pot. They can\'t call without a strong hand.'
+    },
+    {
+      label: 'Combo Draw',
+      q: 'You have J♠T♠. Flop: 9♠8♠2♦. You have both a flush draw and an open-ended straight draw. How many outs approximately?',
+      opts: ['8 outs (straight only)', '9 outs (flush only)', '~15 outs (combo draw)', '13 outs'],
+      ans: 2,
+      exp: '<strong>~15 outs — a massive combo draw.</strong> Flush draw: 9 outs. OESD: 8 outs. But 3 of the straight outs are also flush outs (7♠, Q♠, 6♠... actually two overlap). Net: approximately 15 outs. On the flop, 15 x 4 = ~60% to hit by the river. You\'re actually a FAVOURITE over most made hands — raise or semi-bluff aggressively.'
+    },
+    {
+      label: 'Overpair Danger',
+      q: 'You raised with A♦A♣. Flop: Q♥J♠T♥. Two opponents both check. What do you do?',
+      opts: ['Bet large — you have an overpair', 'Check back — this board is very dangerous for Aces', 'Bet small to see where you are', 'Bet half pot and fold to a raise'],
+      ans: 1,
+      exp: '<strong>Check back on this dangerous board.</strong> Q-J-T is one of the worst flops for Aces. Straights (K9, A-K), two pairs, and sets are all possible. Both opponents checking suggests draws or middling hands — or a slowplay. Check, take the free turn card, and reassess. You have a big hand but you\'re vulnerable.'
+    },
+    {
+      label: 'Bluff Catching',
+      q: 'You have J♣J♦. Board: A♠K♦7♣2♥Q♠. Opponent bets 70% of the pot on the river. What do you do?',
+      opts: ['Call — they could be bluffing', 'Fold — almost everything beats Jacks here', 'Raise — representing a straight', 'Call — you\'ve invested too much to fold'],
+      ans: 1,
+      exp: '<strong>Fold Jacks.</strong> The board ran out A-K-7-2-Q. Almost every strong hand beats you: AA, KK, QQ, AK, AQ, KQ, a straight. A 70% river bet is a strong bet. Your JJ has near-zero showdown value here. "I\'ve invested too much" is never a reason to call with near-zero equity — that\'s called the sunk cost fallacy.'
+    },
+    {
+      label: 'Set Mining Payoff',
+      q: 'You called pre-flop with 5♣5♦. Flop: 5♠K♦J♣. You hit your set. Opponent bets 50% pot. What do you do?',
+      opts: ['Call — don\'t scare them', 'Raise — extract value while they have top pair', 'Call then lead the turn', 'Slow-play all three streets'],
+      ans: 1,
+      exp: '<strong>Raise the flop.</strong> You have middle set on K-J-5. This board connects with a lot of hands: KJ, KQ, AK, JJ, KK. Your set is disguised and very strong. Raise to build the pot now. Slow-playing sets on connected boards risks losing a big pot when the turn or river completes a straight or flush for your opponent.'
+    },
+    {
+      label: 'Multiway Caution',
+      q: 'You have Q♥Q♦. Flop: 2♣5♦J♠ in a 4-way pot. Two players check, third bets large. What do you do?',
+      opts: ['Raise — build the pot with an overpair', 'Call and see what the other players do', 'Fold — too many opponents', 'Shove all-in'],
+      ans: 1,
+      exp: '<strong>Call and see what the others do.</strong> QQ is an overpair, but in a 4-way pot, a large bet on J-5-2 could be top pair or better. Call and reassess on the turn. Raising bloats the pot against a range that may include sets. In multiway pots, proceed cautiously with overpairs — you\'re no longer as dominant as you are heads-up.'
+    },
+    {
+      label: 'Thin Value',
+      q: 'You have A♦T♠. Board: A♣7♥3♦K♠2♣. Opponent checks river. You\'re in position. What do you do?',
+      opts: ['Check back — top pair is good enough for showdown', 'Bet small (20-30%) for thin value', 'Bet large (75%) to maximize value', 'Bet then fold to a raise'],
+      ans: 1,
+      exp: '<strong>Bet small (20-30%) for thin value.</strong> You have top pair with a ten kicker on a board with a King. If they have a 7, 3, or 2, they\'ll call a small river bet. A big bet folds worse hands and gets called only by better hands. Checking is also fine. A small bet extracts value from weaker aces and middle pairs.'
+    },
+    {
+      label: 'C-bet vs 3-bet pot',
+      q: 'You 3-bet with K♠Q♠ and got one caller. Flop: 9♦4♣2♠ (dry, not your cards). Opponent checks. What do you do?',
+      opts: ['Check — the board missed you', 'Bet 33% pot — small, frequent c-bet on dry boards', 'Bet 75% pot — represent your strong 3-bet range', 'Go all-in — polarise'],
+      ans: 1,
+      exp: '<strong>Bet small (33%) on the dry board.</strong> As the 3-bettor, your range contains all the strong hands (AA, KK, QQ, AK) and this board changes nothing. A small, high-frequency bet on dry boards is a core c-bet strategy — it wins the pot often since neither player is likely to have connected strongly.'
+    },
+    {
+      label: 'River Probe',
+      q: 'You called a pre-flop raise. The raiser checks the flop AND the turn. You have 8♥9♥ — just overcards, no pair. River is a blank. What do you do?',
+      opts: ['Check — take the free showdown', 'Bet — they\'ve shown weakness on both streets, attack', 'Fold — you have nothing', 'Bet tiny to block'],
+      ans: 1,
+      exp: '<strong>Bet — take the pot.</strong> When someone checks twice after raising pre-flop, they\'ve given up or have a weak, marginal holding. A river bet (called a delayed bluff or probe) wins the pot frequently here. Your 89 has no showdown value, so betting is the only path to winning the hand. Size it at 60-75% pot to be credible.'
+    },
+    {
+      label: 'Drawing Without Fold Equity',
+      q: 'You have a flush draw in a 4-way pot. Bet goes in from the first player. Two more players call before it reaches you. What changes?',
+      opts: ['Nothing — a flush draw is a flush draw', 'Call — more callers = better pot odds', 'The pot is bigger but so is the risk that someone else has the flush too', 'Raise — punish everyone'],
+      ans: 2,
+      exp: '<strong>In a multiway pot, drawing hands face a subtler risk.</strong> Pot odds improve with more callers, but when you complete your flush on the river, you need it to be the best flush. Someone else might also be drawing to a higher flush (say, you have the 9♥ flush, they have the A♥). Additionally, fold equity disappears — raising a draw works better heads-up. In 4-way pots, simply call with strong draws and play for implied odds.'
     }
   ],
 
@@ -1800,35 +2139,105 @@ const quizData = {
       q: 'You have 12 BB. It\'s folded to you on the BTN. You have A♣8♠. What do you do?',
       opts: ['Raise to 3x BB and play post-flop', 'Fold — A8 isn\'t strong enough', 'Shove all-in', 'Min-raise and fold to a 3-bet'],
       ans: 2,
-      exp: '<strong>Shove all-in.</strong> At 12 BB, you\'re in push/fold territory. A8o is a clear shove from the BTN — you have an Ace (blocker to AA/AK) and decent equity against calling ranges. Raising small and then folding to a 3-bet wastes chips. Push or fold, nothing in between.'
+      exp: '<strong>Shove all-in.</strong> At 12 BB, you\'re in push/fold territory. A8o is a clear shove from the BTN — you have an Ace blocker and decent equity. Raising small then folding to a 3-bet wastes chips. Push or fold, nothing in between.'
     },
     {
-      label: 'Push/Fold',
+      label: 'Push vs Call',
       q: 'You have 8 BB in the BB. BTN shoves all-in. You have K♠5♦. What do you do?',
-      opts: ['Call — you\'re getting good pot odds', 'Fold — K5 isn\'t strong enough to call off your stack', 'Re-shove (already all-in as BB)'],
+      opts: ['Call — you\'re getting good pot odds', 'Fold — K5o isn\'t strong enough to call off your stack', 'You\'re already all-in as the BB'],
       ans: 1,
-      exp: '<strong>Fold K5o.</strong> This is a crucial distinction: shoving and calling are different. To call an all-in and risk your tournament life, you need much better cards — roughly AJ+, A5s+, 88+ against an unknown range. K5o is too weak. The caller needs to be ahead more often than the pot odds require, and K5o doesn\'t cut it.'
+      exp: '<strong>Fold K5o.</strong> Shoving and calling are very different. To call an all-in and risk your tournament life, you need much stronger cards — roughly AJ+, A5s+, 88+ against an unknown range. K5o is too weak. The caller needs to be ahead often enough to justify risking elimination, and K5o doesn\'t make the cut.'
     },
     {
-      label: 'ICM',
-      q: 'You\'re 2 spots from the money (bubble). Average stack. Big stack shoves into you. You have J♣J♦. What\'s the most tournament-correct play?',
-      opts: ['Call — JJ is a premium hand, always call', 'Fold — ICM pressure means survival is worth more than chips here', 'It depends on stack sizes and the pay jump', 'Shove back (you\'re already all-in)'],
+      label: 'ICM Bubble',
+      q: 'You\'re 2 spots from the money. Average stack. Big stack shoves into you. You have J♣J♦. What\'s the tournament-correct play?',
+      opts: ['Call — JJ is a premium hand, always call', 'Fold — ICM says survival matters more', 'It depends on stack sizes and the pay jump', 'Always call with JJ'],
       ans: 2,
-      exp: '<strong>"It depends" is the honest answer</strong>, but folding JJ is often correct near the bubble. ICM (Independent Chip Model) says survival has real monetary value when near the money. Busting on the bubble is the worst outcome. Against a wide-ranging big stack, calling JJ for your tournament life right before the money has significant risk. Many tournament players fold JJ here — especially if other short stacks are about to bust.'
+      exp: '<strong>"It depends" is the honest answer</strong>, but folding JJ is often correct near the bubble. ICM says survival has real monetary value when near the money. Busting on the bubble (no prize at all) is the worst outcome. Many tournament players fold JJ on the bubble — especially if other short stacks are about to bust anyway.'
     },
     {
       label: 'Blind Stealing',
-      q: 'You\'re on the BTN with 6♠5♠ (20 BB stack). Blinds are 1,000/2,000. Both blinds are tight players. Everyone folds to you. What do you do?',
+      q: 'You\'re on the BTN with 6♠5♠ (20 BB). Blinds are 1,000/2,000. Both blinds are tight players. Everyone folds to you. What do you do?',
       opts: ['Fold — 65s isn\'t strong enough', 'Limp in', 'Shove all-in', 'Raise to 4,500'],
       ans: 2,
-      exp: '<strong>Shove all-in.</strong> At 20 BB with tight opponents in the blinds, 65s is a great shove. Tight players fold a lot, so you win the blinds (3,000) uncontested often enough. When called, 65s has solid equity with flush + straight draw potential. This is exactly the spot to steal: position, tight opponents, and a live hand.'
+      exp: '<strong>Shove all-in.</strong> At 20 BB vs tight blinds, 65s is a great shove. Tight players fold a lot — you win the blinds (3,000) often enough. When called, 65s has solid equity with flush and straight draw potential. Position + tight opponents + a live hand = perfect shove spot.'
     },
     {
       label: 'Stack Management',
-      q: 'You have 35 BB. The chip leader at your table has 120 BB and raises aggressively every hand. You have 9♦9♣. He raises again. What do you do?',
-      opts: ['Fold — he\'s aggressive, probably has a good hand', 'Call — set-mine and see the flop', '3-bet — 99 is strong enough to 3-bet', 'Shove all-in immediately'],
+      q: 'You have 35 BB. The chip leader raises aggressively every hand. You have 9♦9♣. He raises again. What do you do?',
+      opts: ['Fold — he\'s aggressive, probably has a good hand', 'Call — set-mine and see the flop', '3-bet — 99 is strong enough to push back', 'Shove all-in immediately'],
       ans: 2,
-      exp: '<strong>3-bet with 99.</strong> Against an aggressive chip leader who raises wide, 99 is a clear 3-bet. You want to re-raise and put pressure back on them. Calling to set-mine with 35 BB isn\'t ideal — implied odds require ~15x stack depth. 3-betting takes back the initiative. If they 4-bet shove, you can fold and still have 25+ BB to work with.'
+      exp: '<strong>3-bet with 99.</strong> Against an aggressive chip leader who raises wide, 99 is a clear 3-bet. You want to re-raise and take back the initiative. Calling to set-mine with 35 BB isn\'t ideal — you need 15x+ stack depth. If they 4-bet shove, you can fold and still have 25+ BB to work with.'
+    },
+    {
+      label: 'Antes Pressure',
+      q: 'Levels: 300/600 no antes. Next level: 400/800 with a 100 ante (8 players = 800 in antes). How does this change orbit cost?',
+      opts: ['Barely — antes are small', 'Significantly — orbit cost almost doubles', 'Only matters if you\'re short-stacked', 'Antes only change post-flop play'],
+      ans: 1,
+      exp: '<strong>Orbit cost almost doubles with antes.</strong> Without antes: 300+600 = 900 per orbit. With antes: 400+800+800 = 2,000 per orbit. Your stack erodes much faster. This forces you to steal more aggressively and widen your opening range. When antes kick in, waiting for premium hands becomes very expensive.'
+    },
+    {
+      label: 'Bubble — Active Play',
+      q: 'You have 40 BB on the bubble. Short stack (3 BB) is in the BB. Everyone folds to you in the CO. You have A♣J♠. What do you do?',
+      opts: ['Fold — avoid risking chips on the bubble', 'Limp — avoid confrontation', 'Raise standard — strong hand and position', 'Check (can\'t — you\'re in CO, not BB)'],
+      ans: 2,
+      exp: '<strong>Raise standard with AJo from CO on the bubble.</strong> You have 40 BB and a strong hand. Even if the 3 BB short stack shoves, you\'re calling a small amount with a big edge. Don\'t over-tighten on the bubble — actively stealing blinds with strong hands is profitable and correct.'
+    },
+    {
+      label: 'Final Table ICM',
+      q: 'You\'re at a 6-player final table. You\'re the chip leader. Shortest stack shoves 4 BB into you. You have 5♣5♦. What do you consider?',
+      opts: ['Call — 55 is ahead of their range and the risk is small', 'Fold — protect your chip lead', 'Call only if you have the nuts', 'Never call as chip leader'],
+      ans: 0,
+      exp: '<strong>Call — ICM pressure is low when the risk is tiny.</strong> Only 4 BB is at risk (a fraction of your chip lead) and 55 is a favourite over a wide desperation shove range. Folding lets a short stack survive and regain fold equity. At chip lead vs a 4 BB shove, call with any edge.'
+    },
+    {
+      label: 'Heads-Up Play',
+      q: 'You\'re heads-up. You have K♣4♠ in the Small Blind (which is also the dealer button heads-up). What do you do?',
+      opts: ['Fold — K4o is weak', 'Limp or min-raise', 'Raise or shove — heads-up ranges are extremely wide', 'Wait for a premium hand'],
+      ans: 2,
+      exp: '<strong>Raise or shove — heads-up ranges are very wide.</strong> K4o heads-up is well above average. In a 9-player game you\'d fold K4o. Heads-up, you play ~60-70% of hands. Waiting for good hands means folding away your stack while blinds eat you. K4o is a clear raise from the SB heads-up.'
+    },
+    {
+      label: 'Pay Jump Awareness',
+      q: 'You\'re at 4 players left. Big pay jumps between spots. A player with 20 BB shoves. You have 15 BB and A♦T♣. What\'s the key consideration?',
+      opts: ['Call — ATo is a good hand vs a 20 BB shove', 'Fold — too risky given the pay jumps', 'This depends on the other two players\' stack sizes', 'Always call with an Ace'],
+      ans: 2,
+      exp: '<strong>Stack sizes of all players matter.</strong> If the other two players are very short-stacked (say, 3 BB each), letting them bust first moves you up two pay spots without risking your stack. If all stacks are similar, ICM pressure drops and ATo becomes a strong call. ATo is strong enough — the question is whether there\'s a more profitable path to a better finish.'
+    },
+    {
+      label: 'Chip Lead Usage',
+      q: 'You have 3x the average stack with 15 players left. How should you use this advantage?',
+      opts: ['Wait for premium hands — protect your lead', 'Raise more frequently, especially vs short stacks', 'Tighten up — preserve chips', 'Go all-in frequently to intimidate'],
+      ans: 1,
+      exp: '<strong>Raise frequently, especially vs short stacks.</strong> A chip lead is a weapon — use it. Short stacks can\'t call without risking elimination, so they fold more than they should. Avoid all-in confrontations with other big stacks (you could be levelled), but bully the rest of the table. A big stack that plays tight simply becomes an average stack from blind attrition.'
+    },
+    {
+      label: 'Short Stack Timing',
+      q: 'You have 7 BB. You\'ve been waiting for a good spot. You\'re in the HJ. You have J♦7♦. What do you do?',
+      opts: ['Fold — wait for a better hand', 'Limp and see a flop', 'Shove all-in', 'Wait for the button where you have position'],
+      ans: 2,
+      exp: '<strong>Shove from HJ with 7 BB.</strong> At 7 BB, J7s is well above the shove threshold from HJ. Waiting for a "better spot" at 7 BB means blinding down to 5 BB, then 4 BB — each level weaker. J7s from HJ with fold equity is better than K5o from UTG with no fold equity. Shove now while you still have meaningful pressure.'
+    },
+    {
+      label: 'Tournament vs Cash',
+      q: 'You\'re deep in a tournament. You flop top two pair and face an all-in. What\'s fundamentally different from a cash game situation?',
+      opts: ['Nothing — the math is the same', 'You can\'t rebuy — busting destroys all future prize equity', 'Tournaments always require folding more', 'Two pair is automatically a call in tournaments'],
+      ans: 1,
+      exp: '<strong>Busting destroys all future prize equity.</strong> In a cash game, you just rebuy — losing a hand costs chips, not the session. In a tournament, busting with 40 players left means zero prize money. ICM makes survival worth real money. With top two pair you\'ll usually call — but the stakes of the decision are fundamentally different to a cash game.'
+    },
+    {
+      label: 'BB Defense — Tournament',
+      q: 'Blinds 500/1,000. You have 22 BB in the BB. BTN shoves for 18 BB. You have Q♠8♦. What do you do?',
+      opts: ['Call — pot odds make this fine', 'Fold — Q8o vs a BTN shove range is thin', 'Call — you must defend the BB', 'Fold — ICM says be cautious'],
+      ans: 1,
+      exp: '<strong>Fold Q8o vs an 18 BB BTN shove.</strong> You need to call 17 BB to win ~19 BB — roughly 47% equity needed. Q8o has about 43% equity against a typical BTN shove range. You\'re marginally below breakeven AND you risk 17 of your 22 BB. A marginal -EV call that risks nearly your whole stack is a fold in a tournament.'
+    },
+    {
+      label: 'Re-entry Decision',
+      q: 'You\'ve lost 80% of your chips early in a re-entry tournament. Re-entry costs the same as the buy-in. What\'s the key question?',
+      opts: ['Always re-enter — more chips = better', 'Never re-enter after losing', 'Is your remaining stack too small to be effective vs re-entering fresh?', 'Only re-enter if you can afford 3+ bullets'],
+      ans: 2,
+      exp: '<strong>Compare your crippled stack vs a fresh re-entry stack.</strong> If you have fewer than 15-20 BB and the average is 40+, a fresh stack gives you a much better fighting chance. Re-entry makes mathematical sense if it improves your expected prize. But don\'t re-enter just because you can — budget matters and multiple costly bullets is a common leak.'
     }
   ],
 
@@ -1839,72 +2248,163 @@ const quizData = {
       context: 'Effective stacks: 40 BB. This is a multiway pot.',
       opts: ['Fold — 3 players are already in', 'Call — position and implied odds are excellent', 'Re-raise (3-bet)', 'Fold unless you have premium cards'],
       ans: 1,
-      exp: '<strong>Call with T9s on the BTN.</strong> This is exactly the spot suited connectors thrive in: you have position on everyone, a multiway pot (better implied odds if you hit), and T9s has great drawing potential. Calling is perfect. 3-betting turns it into a heads-up pot and wastes the positional and implied-odds advantage of this hand.'
+      exp: '<strong>Call with T9s on the BTN.</strong> This is exactly the spot suited connectors thrive: position on everyone, a multiway pot for better implied odds, and T9s has great drawing potential. 3-betting wastes the positional and implied-odds advantage of this hand.'
     },
     {
       label: 'Pre-Flop — 3-bet',
       q: 'CO raises to 600 (blinds 100/200). You\'re on BTN with A♦A♠. What do you do?',
-      opts: ['Call and set a trap', '3-bet to 1,800', '4-bet shove', 'Fold (joking)'],
+      opts: ['Call and set a trap', '3-bet to 1,800', '4-bet shove', 'Fold (absolutely not)'],
       ans: 1,
-      exp: '<strong>3-bet to 1,800.</strong> With Aces, you always 3-bet. Calling allows the blinds in cheap and you lose the positional and range-advantage of building the pot now. 3-bet to ~3x the open. If they 4-bet, then shove. Never slow-play Aces pre-flop.'
+      exp: '<strong>3-bet to 1,800.</strong> With Aces, always 3-bet. Calling lets the blinds in cheap and surrenders the range advantage of building the pot now. 3-bet to ~3x the open. If they 4-bet, shove. Never slow-play Aces pre-flop.'
     },
     {
-      label: 'Post-Flop — Drawing',
-      q: 'You have A♣5♣. Flop: K♣7♣2♥. Pot is 400. Opponent bets 200. You have a nut flush draw (9 outs). Do you call?',
+      label: 'Post-Flop — Nut Draw',
+      q: 'You have A♣5♣. Flop: K♣7♣2♥. Pot is 400. Opponent bets 200. You have the nut flush draw (9 outs). Do you call?',
       context: 'Call 200 into total pot of 800 = 25% equity needed. Flush draw on flop = ~36%.',
-      opts: ['No — too risky with just a draw', 'Yes — call, the pot odds support it', 'Raise — use your drawing hand as a semi-bluff', 'Fold — Ace-high is too weak'],
+      opts: ['No — too risky with just a draw', 'Yes — call, the pot odds support it', 'Raise — semi-bluff the nut flush draw', 'Fold — Ace-high is too weak'],
       ans: 1,
-      exp: '<strong>Call (or raise!).</strong> You need 25% equity to call — you have ~36% (flush draw). The call is mathematically correct. Even better: raising turns this into a semi-bluff. You might win immediately if they fold, and if they call, you still have 36% to improve. Both call and raise are good — but definitely don\'t fold.'
+      exp: '<strong>Call or raise.</strong> You need 25% equity — you have ~36%. The call is mathematically correct. Even better: raising turns this into a semi-bluff. You might win immediately, and if called, you still have 36% equity. Both call and raise are good — never fold a nut flush draw.'
     },
     {
       label: 'Post-Flop — Board Reading',
       q: 'Board: Q♠J♠T♠. You have A♠2♦. Your opponent bets large. What do you consider?',
-      opts: ['Call — you have top pair potential', 'Raise — you have the nut flush draw', 'Fold — dangerous board even with the nut flush draw', 'Just call or raise — you have the nuts (Royal Flush draw)'],
+      opts: ['Call — you have top pair potential', 'Raise — you have the nut flush draw', 'Fold — dangerous board even with a flush draw', 'Call or raise — you have a Royal Flush draw'],
       ans: 3,
-      exp: '<strong>A♠ + Q♠J♠T♠ = you need K♠ or any Spade for the flush, but more importantly: you have a Royal Flush draw!</strong> A-K-Q-J-T of spades would be the best hand possible. You also already have straight and flush draws. This is an enormous draw — raise big or call. You should never fold with the nut draw and potential for the best hand in poker.'
+      exp: '<strong>A♠ on a Q♠J♠T♠ board = Royal Flush draw!</strong> If K♠ comes, you make A-K-Q-J-T of spades. You also have straight draws and the nut flush draw. This is an enormous hand — raise big or call. Never fold with the nut draw and a Royal Flush draw.'
     },
     {
       label: 'Tournament — Short Stack',
-      q: 'You have 6 BB in the CO. Blinds 500/1000. Everyone folds to you. You have K♦J♦. What do you do?',
-      opts: ['Fold — 6 BB isn\'t enough to play', 'Raise to 2,500', 'Shove all-in', 'Limp'],
+      q: 'You have 6 BB in the CO. Blinds 500/1,000. Everyone folds to you. You have K♦J♦. What do you do?',
+      opts: ['Fold — 6 BB isn\'t enough to play with', 'Raise to 2,500', 'Shove all-in', 'Limp'],
       ans: 2,
-      exp: '<strong>Shove all-in immediately.</strong> At 6 BB in the CO, you shove any playable hand. KJo is well above the threshold — it\'s a clear shove. You need chips. The BTN, SB, and BB fold often enough that you pick up 1,500 in blinds. When called, KJ has decent equity. Raising to 2,500 and then folding is a disaster — never raise then fold with 6 BB.'
+      exp: '<strong>Shove all-in.</strong> At 6 BB in the CO, shove any playable hand. KJo is a clear shove. Raising to 2,500 and then folding to a 3-bet is a disaster — never raise then fold at 6 BB. You need chips. Shove now.'
     },
     {
-      label: 'Pre-Flop — Facing Limpers',
+      label: 'Pre-Flop — Limpers',
       q: 'Blinds 100/200. 4 players limp. You\'re on BTN with K♥Q♥. What do you do?',
-      opts: ['Limp along — 4 players already in', 'Raise to 600 (3x BB)', 'Raise to 1,200–1,400 (6–7x BB)', 'Fold — too many opponents for KQs'],
+      opts: ['Limp along — 4 players already in', 'Raise to 600 (3x BB)', 'Raise to 1,200-1,400 (6-7x BB)', 'Fold — too many opponents for KQs'],
       ans: 2,
-      exp: '<strong>Raise large — 6–7x BB.</strong> KQs is a strong hand. With 4 limpers, a standard 3x raise doesn\'t work — they\'re all getting great odds to call. Raise big enough to thin the field (1,200–1,400). If they all call anyway, you still have position and a quality suited hand. Never limp KQs.'
+      exp: '<strong>Raise large — 6-7x BB.</strong> KQs is a strong hand. With 4 limpers, a 3x raise gives everyone great odds to call. Raise big enough to thin the field. If they all call anyway, you still have position and a quality suited hand. Never limp KQs on the BTN.'
     },
     {
-      label: 'Post-Flop — Value',
+      label: 'Post-Flop — Top Set',
       q: 'You have J♥J♦. Board: J♣8♠3♦ (dry board). You raised pre-flop. Opponent checks. What do you do?',
-      opts: ['Check — let them bluff', 'Bet 25% pot (probe)', 'Bet 60–75% pot (value)', 'Check-raise trap'],
+      opts: ['Check — let them bluff', 'Bet 25% pot (probe)', 'Bet 60-75% pot (value)', 'Check-raise trap'],
       ans: 2,
-      exp: '<strong>Bet 60–75% pot for value.</strong> You have top set (three Jacks) on a safe board. This is an extremely strong hand. Bet for value — your opponent has pairs, draws, and middle cards they\'ll call with. Checking to trap occasionally is fine, but usually you want to bet to build the pot now. Fast-play your big hands — slow-playing costs you money.'
+      exp: '<strong>Bet 60-75% pot for value.</strong> You have top set on a safe board. Bet for value — your opponent has pairs, draws, and middle cards they\'ll call with. Fast-play your big hands. Checking to "trap" occasionally is fine, but mostly you want to build the pot now.'
     },
     {
-      label: 'Tournament — ICM Bubble',
-      q: 'Final 10 players, top 9 get paid. You\'re average stack (28 BB). Someone with 3 BB shoves from UTG. You\'re in the CO with A♠K♣. What do you do?',
-      opts: ['Call — AK dominates most of their range', 'Fold — let the short stack bust to someone else', 'Fold — ICM says avoid risk near the bubble'],
+      label: 'Tournament — ICM',
+      q: 'Final 10 players, top 9 get paid. Average stack (28 BB). Someone with 3 BB shoves from UTG. You\'re in the CO with A♠K♣. What do you do?',
+      opts: ['Call — AK dominates their wide range', 'Fold — let the short stack bust to someone else', 'Fold — ICM says avoid risk on the bubble'],
       ans: 0,
-      exp: '<strong>Call here.</strong> The short stack has 3 BB and shoves from UTG — their range is wide (any ace, any king, any pair). AK dominates most of this range and is a small favourite against pairs (55% chance). Importantly, this is a cheap risk (only 3 BB) vs a potentially huge chip gain. With only 3 BB at risk, ICM pressure is minimal. If it were a large stack shoving, fold would be considered — but against a 3 BB desperation shove, call with AK.'
+      exp: '<strong>Call here.</strong> The short stack has 3 BB and shoves from UTG — their range is wide. AK dominates most of it. Importantly, only 3 BB is at risk — ICM pressure is minimal for such a small cost. If it were a large stack shoving, folding would be considered. Against a 3 BB desperation shove, call with AK.'
     },
     {
-      label: 'Post-Flop — Bluffing',
+      label: 'Post-Flop — Multiway Bluff',
       q: 'You raised pre-flop with 6♦6♣. Flop: A♠K♦Q♣. Both opponents check to you. What do you do?',
-      context: '3-way pot. You have no pair, no draw on a high, connected board.',
-      opts: ['C-bet 75% — you raised, they checked, take it', 'Check — this board is terrible for your hand', 'Check — multiway bluffs almost never work', 'Fold'],
-      ans: 2,
-      exp: '<strong>Check back.</strong> On A-K-Q with three players, someone almost certainly connected. C-betting here as a bluff is a mistake — you\'re bluffing into multiple opponents who have aces, kings, queens, AK, AQ, KQ, etc. Bluffs in multiway pots need to fold out multiple opponents simultaneously, which almost never happens. Take the free card and hope to catch a 6.'
+      context: '3-way pot. You have no pair, no draw on a high connected board.',
+      opts: ['C-bet 75% — you raised, they checked', 'Check — this board is terrible for 66', 'Bet small to probe', 'Fold (you can\'t, but consider checking)'],
+      ans: 1,
+      exp: '<strong>Check back.</strong> On A-K-Q with three players, someone almost certainly connected. Multiway bluffs need to fold out multiple opponents simultaneously — that almost never happens on a board like this. Take the free card and hope to catch a 6.'
     },
     {
-      label: 'Fundamentals — Aggression',
+      label: 'Fundamentals — SB vs BB',
       q: 'It\'s folded to you in the SB. You have Q♦8♦. BB is a tight, passive player. What\'s the best play?',
-      opts: ['Limp — just see a cheap flop', 'Raise 3x BB — steal opportunity vs tight BB', 'Fold — Q8s isn\'t strong enough', 'Check (can\'t — you must post the SB)'],
+      opts: ['Limp — just see a cheap flop', 'Raise 3x BB — steal opportunity vs tight BB', 'Fold — Q8s isn\'t strong enough', 'Check (must post SB first)'],
       ans: 1,
-      exp: '<strong>Raise 3x BB.</strong> Q8s is a borderline hand, but heads-up against a tight, passive BB, you should raise with a wide range. They fold often, giving you the pot. When called, you have position... wait, you\'re in the SB so you\'re out of position. Actually, this is a close spot — raise or fold both work, but limping never works. The tight BB folds to raises often enough to make this profitable.'
+      exp: '<strong>Raise 3x BB.</strong> Q8s heads-up vs a tight, passive BB is a raise. They fold often, giving you the pot. When called, you\'re out of position — but Q8s has flush draw potential and Queen-high can flop top pair. Raise or fold from the SB; never limp.'
+    },
+    {
+      label: 'Full Hand — Flopping Two Pair',
+      q: 'You\'re HJ with A♠Q♦ and raise. CO calls. Heads-up to the flop. Flop: A♦Q♣7♠. What do you have and what do you do?',
+      opts: ['Top pair — check to the caller', 'Two pair — bet for value immediately', 'Top pair — bet small', 'Two pair — check and let them bet'],
+      ans: 1,
+      exp: '<strong>You flopped top two pair — bet for value immediately.</strong> A-7 and Q-7 boards are unlikely to help the CO. Bet 50-65% pot to extract value from any Ace, Queen, pair of 7s, or any draw. This is a fast-play spot — two pair on a dry board should be betting, not trapping.'
+    },
+    {
+      label: 'Full Hand — Turn with Set',
+      q: 'You have K♦K♣ and raised pre-flop. Flop: K♠5♦2♣ (you bet, called). Turn: 4♥ (blank). Opponent checks. Pot is 1,200. What do you do?',
+      opts: ['Check — protect against rivers', 'Bet small (25%) — keep them in', 'Bet medium (55-65%) for value', 'Go all-in'],
+      ans: 2,
+      exp: '<strong>Bet medium (55-65%) on the turn.</strong> You have top set on 5-4-2. An A3 straight is possible but unlikely. They called the flop — they probably have top pair, middle pair, or a draw. Medium bet keeps them in with middling hands and extracts value without scaring off everything you\'re beating.'
+    },
+    {
+      label: 'Full Hand — River Straight',
+      q: 'You have 7♦8♦. Board: 5♠6♣9♥T♦J♠. You made the straight on the turn (5-6-7-8-9) but the river J♠ means Q8 or Q9 beats you. Opponent bets large. What do you do?',
+      opts: ['Call — you have a straight, that\'s strong', 'Raise — your straight is strong', 'Fold — the higher straight is very possible', 'Call cautiously — be aware of the higher straight'],
+      ans: 3,
+      exp: '<strong>Call cautiously, aware the higher straight is possible.</strong> Your 7-8 makes a 5-9 straight. But any QJ or Q8 beats you with a higher straight. A large river bet after the J completed the board is suspicious. Against a solid, value-heavy player: consider folding. Against a loose/bluffing player: call. This is a hand-reading and opponent-reading decision.'
+    },
+    {
+      label: 'Reading the Nuts',
+      q: 'Board: 7♥8♥9♥T♠J♦. What\'s the best possible hand (the "nuts") on this board?',
+      opts: ['Any heart for the flush', 'Q-K for the straight', '6♥ or Q♥ for a straight flush', 'A♥ for the nut flush'],
+      ans: 2,
+      exp: '<strong>The nuts is a straight flush.</strong> Specifically, 6♥ plus any other heart makes a straight flush using 6♥7♥8♥9♥T♥ (or similar). Q♥ doesn\'t work as there\'s no K♥ for a royal. On a mixed board like this the nuts is context-dependent — but straight flushes using the connected hearts are the best possible hands.'
+    },
+    {
+      label: 'Pot Odds — Gutshot',
+      q: 'Pot is 600. Opponent bets 300. You have a gutshot straight draw (4 outs, ~8% on the next card). Should you call?',
+      opts: ['Yes — you\'re getting 3:1 odds', 'No — 8% equity doesn\'t meet the 33% required', 'Yes — always call gutshots', 'Depends on implied odds and stack depth'],
+      ans: 3,
+      exp: '<strong>Implied odds are the key factor.</strong> Pure pot odds say no — you need 33% equity, you have 8%. But if you hit and get paid a large amount, the implied odds justify calling. Gutshots are marginal calls unless stacks are deep and your opponent is likely to pay off a made straight. Flush draws are generally fine to call; gutshots need more justification.'
+    },
+    {
+      label: 'Double Barrel',
+      q: 'You raised pre-flop and c-bet the flop. Turn: your hand is still air (no pair, no draw). Opponent calls again. Should you barrel the turn?',
+      opts: ['Yes — keep the pressure on', 'No — if they called the flop, turn barrels with no equity is burning chips', 'Only with a backdoor draw', 'Always barrel when you c-bet the flop'],
+      ans: 1,
+      exp: '<strong>Slow down — don\'t barrel the turn with nothing.</strong> If an opponent called your c-bet, they have something: a pair, a draw, or they\'re floating. Betting again with no equity burns chips into a range that already showed interest. Turn barrels need a reason: a draw you picked up, a scare card, or a board that got worse for their range. Pure air = check.'
+    },
+    {
+      label: 'Calling vs Raising — Post-Flop',
+      q: 'You have 9♣9♦. Flop: 9♠4♥2♦. You have top set. Opponent bets 50% pot. Call or raise?',
+      opts: ['Raise immediately — get value now', 'Call and spring the trap on the turn', 'Both are valid — depends on board and opponent', 'Always raise with a set'],
+      ans: 2,
+      exp: '<strong>Both calling and raising are valid.</strong> Raising gets value from top pairs and draws but may fold worse hands. Calling keeps them in, disguises your strength, and builds the pot over more streets. On a dry 9-4-2 board, slow-playing is safer since there are few scary cards. On a wetter board, raise to charge draws. Both lines are correct here.'
+    },
+    {
+      label: 'Stack-to-Pot Ratio',
+      q: 'Pot is 600. You and opponent both have 3,000 chips behind. What is the SPR (Stack-to-Pot Ratio)?',
+      opts: ['0.5', '2', '5', '10'],
+      ans: 2,
+      exp: '<strong>SPR = 5 (stack ÷ pot = 3,000 ÷ 600).</strong> SPR tells you how committed the stacks are. SPR 1 or less: get stacks in with any pair. SPR 4-6: strong pairs and big draws are profitable calls. SPR 10+: deep stack poker, speculative hands gain value. With SPR 5, top pair is a strong "play for stacks" hand; small pairs want to be more cautious.'
+    },
+    {
+      label: 'Hand Reading — Limp-Raise',
+      q: 'A tight player limps UTG then raises when you bet the flop (A♦8♣3♠). What does their range look like?',
+      opts: ['Weak hands — they limped so they\'re passive', 'Very strong hands — AA, 88, 33, A8s (slowplayed monsters)', 'Any two cards — could be a draw', 'Bluffs — tight players bluff-raise when they miss'],
+      ans: 1,
+      exp: '<strong>Very strong hands.</strong> A tight player who limps UTG then raises the flop bet has an extremely narrow range: AA (slowplayed pre-flop), sets (88, 33), or two pair (A8s, A3s). Tight players almost never bluff-raise. Proceed with extreme caution or fold unless you have the top of your range.'
+    },
+    {
+      label: 'Live Tell',
+      q: 'A player announces a big bet confidently and stares you down. What does this typically mean in amateur live poker?',
+      opts: ['They have a strong hand — confidence = strength', 'They\'re bluffing — strong reactions often mask weakness', 'Ignore it — physical tells are unreliable', 'Both B and C — it\'s a common tell but not reliable'],
+      ans: 3,
+      exp: '<strong>Both "fake strength = weakness" and "it\'s unreliable" are correct.</strong> In amateur games, players often act strong when weak. But experienced players know this and reverse it. Physical tells are interesting context but unreliable without history with that specific player. Better tells: bet sizing, timing, and overall betting patterns. Never make a big fold or call purely on a tell.'
+    },
+    {
+      label: 'KK on Ace-High Flop',
+      q: 'You have K♦K♣ and raise UTG. 4 players call. Flop: A♠T♦5♠. Everyone checks to you. What\'s your play?',
+      opts: ['Bet — take control of the pot', 'Check back — the Ace is dangerous in a 5-way pot', 'Go all-in — protect your hand', 'Bet small to test the waters'],
+      ans: 1,
+      exp: '<strong>Check back with KK on an Ace-high board in a multiway pot.</strong> An Ace on the board with 4 opponents who all called an UTG raise means someone almost certainly has an Ace. Betting here turns your hand into a bluff. Check, take the free turn, and see if the situation changes. Kings on an Ace-high board in a big multiway pot are often a check-fold.'
+    },
+    {
+      label: 'Bad Beat — Mindset',
+      q: 'You had AA, got it in pre-flop vs KK, and lost. You have chips left. What\'s the correct response?',
+      opts: ['Play more aggressively to recover quickly', 'Tighten up completely', 'Continue with the same strategy — variance is part of poker', 'Take an immediate break'],
+      ans: 2,
+      exp: '<strong>Continue with the same strategy — variance is fundamental to poker.</strong> AA vs KK all-in pre-flop: KK wins 20% of the time. Over thousands of hands, AA makes money. This specific outcome doesn\'t mean you played wrong. Tilting after a bad beat is one of the biggest leaks in poker. The correct response: breathe, accept variance, play your best poker.'
+    },
+    {
+      label: 'River Check Pattern',
+      q: 'An aggressive player bets pre-flop, bets the flop, bets the turn, then checks the river. What does the river check usually mean?',
+      opts: ['They\'re trapping — always dangerous', 'They\'re giving up — missed a draw or went into pot control', 'They forgot to bet', 'Both A and B depending on the board runout'],
+      ans: 3,
+      exp: '<strong>Both are plausible — context decides.</strong> If the river card completed a flush or straight draw, a check often means the draw missed and they\'re giving up. If the river was a blank, a check could mean pot control with a medium hand, or it could be a trap. Look at what the river card changed: scare card that could have helped them = check likely means missed draw. Blank river = more suspicious.'
     }
   ]
 };
