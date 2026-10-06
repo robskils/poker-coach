@@ -61,10 +61,7 @@ nav {
   display: flex;
   align-items: center;
   gap: 4px;
-  overflow-x: auto;
-  scrollbar-width: none;
 }
-nav::-webkit-scrollbar { display: none; }
 .nav-logo {
   font-family: 'Playfair Display', Georgia, serif;
   font-weight: 800;
@@ -91,6 +88,70 @@ nav::-webkit-scrollbar { display: none; }
 }
 .nav-btn:hover { color: var(--text); }
 .nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ── MOBILE NAV ── */
+.nav-mobile { display: none; }
+@media (max-width: 640px) {
+  .nav-desktop { display: none; }
+  .nav-mobile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+  .nav-current {
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 0.3px;
+  }
+  .nav-hamburger {
+    background: none;
+    border: 1px solid var(--border-gold);
+    border-radius: 6px;
+    color: var(--gold);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 6px 10px;
+    line-height: 1;
+    transition: background .2s;
+  }
+  .nav-hamburger:hover { background: rgba(201,168,76,0.1); }
+  .nav-hamburger.open { background: rgba(201,168,76,0.15); }
+}
+.nav-dropdown {
+  display: none;
+  position: fixed;
+  top: 49px;
+  left: 0;
+  right: 0;
+  background: rgba(6,9,9,0.98);
+  border-bottom: 1px solid var(--border-gold);
+  box-shadow: 0 8px 32px rgba(0,0,0,.8);
+  z-index: 99;
+  padding: 8px 0 12px;
+}
+.nav-dropdown.open { display: block; }
+.nav-dropdown button {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 14px 24px;
+  text-align: left;
+  letter-spacing: 0.3px;
+  transition: color .15s, background .15s;
+}
+.nav-dropdown button:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+.nav-dropdown button.active { color: var(--gold); }
+.nav-dropdown .dd-divider {
+  height: 1px;
+  background: var(--border-gold);
+  margin: 8px 24px;
+  opacity: 0.4;
+}
 
 /* ── LAYOUT ── */
 .section { display: none; max-width: 800px; margin: 0 auto; padding: 24px 16px 80px; }
@@ -767,9 +828,11 @@ hr.gold { border-color: var(--border-gold); }
 .home-hero > div { position: relative; z-index: 1; }
 
 /* ── RESPONSIVE ── */
-@media (max-width: 480px) {
-  .module-grid { grid-template-columns: 1fr 1fr; }
+@media (max-width: 640px) {
+  .module-grid { grid-template-columns: 1fr; }
   .outs-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
   .hand-grid { font-size: 7px; }
   .poker-table { width: 280px; height: 176px; }
 }
@@ -789,14 +852,31 @@ hr.gold { border-color: var(--border-gold); }
 
 <nav>
   <div class="nav-logo">♠ Hold'Em Tips</div>
-  <button class="nav-btn active" onclick="show('home')">Home</button>
-  <button class="nav-btn" onclick="show('basics')">Basics</button>
-  <button class="nav-btn" onclick="show('hands')">Starting Hands</button>
-  <button class="nav-btn" onclick="show('preflop')">Pre-Flop</button>
-  <button class="nav-btn" onclick="show('postflop')">Post-Flop</button>
-  <button class="nav-btn" onclick="show('tournament')">Tournaments</button>
-  <button class="nav-btn" onclick="show('drills')">Drills</button>
+  <div class="nav-desktop">
+    <button class="nav-btn active" onclick="show('home')">Home</button>
+    <button class="nav-btn" onclick="show('basics')">Basics</button>
+    <button class="nav-btn" onclick="show('hands')">Starting Hands</button>
+    <button class="nav-btn" onclick="show('preflop')">Pre-Flop</button>
+    <button class="nav-btn" onclick="show('postflop')">Post-Flop</button>
+    <button class="nav-btn" onclick="show('tournament')">Tournaments</button>
+    <button class="nav-btn" onclick="show('drills')">Drills</button>
+  </div>
+  <div class="nav-mobile">
+    <span class="nav-current" id="nav-current-label">Home</span>
+    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileNav()" aria-label="Menu">☰</button>
+  </div>
 </nav>
+<div class="nav-dropdown" id="nav-dropdown">
+  <button class="active" onclick="show('home')">Home</button>
+  <div class="dd-divider"></div>
+  <button onclick="show('basics')">1. Basics</button>
+  <button onclick="show('hands')">2. Starting Hands</button>
+  <button onclick="show('preflop')">3. Pre-Flop Play</button>
+  <button onclick="show('postflop')">4. Post-Flop Play</button>
+  <button onclick="show('tournament')">5. Tournaments</button>
+  <div class="dd-divider"></div>
+  <button onclick="show('drills')">⚡ Drills</button>
+</div>
 
 <!-- ══════════════════ HOME ══════════════════ -->
 <div id="home" class="section active">
@@ -1560,14 +1640,35 @@ hr.gold { border-color: var(--border-gold); }
 
 <script>
 // ── NAVIGATION ──
+const navLabels = { home:'Home', basics:'Basics', hands:'Starting Hands', preflop:'Pre-Flop', postflop:'Post-Flop', tournament:'Tournaments', drills:'Drills' };
 function show(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   const btns = document.querySelectorAll('.nav-btn');
   btns.forEach(b => { if (b.getAttribute('onclick') === `show('${id}')`) b.classList.add('active'); });
+  const ddBtns = document.querySelectorAll('.nav-dropdown button');
+  ddBtns.forEach(b => { b.classList.toggle('active', b.getAttribute('onclick') === `show('${id}')`); });
+  const lbl = document.getElementById('nav-current-label');
+  if (lbl) lbl.textContent = navLabels[id] || id;
+  closeMobileNav();
   window.scrollTo(0, 0);
 }
+function toggleMobileNav() {
+  const dd = document.getElementById('nav-dropdown');
+  const btn = document.getElementById('nav-hamburger');
+  const open = dd.classList.toggle('open');
+  btn.classList.toggle('open', open);
+  btn.textContent = open ? '✕' : '☰';
+}
+function closeMobileNav() {
+  const dd = document.getElementById('nav-dropdown');
+  const btn = document.getElementById('nav-hamburger');
+  if (dd) { dd.classList.remove('open'); btn.classList.remove('open'); btn.textContent = '☰'; }
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('nav') && !e.target.closest('.nav-dropdown')) closeMobileNav();
+});
 
 // ── HAND MATRIX ──
 const ranks = ['A','K','Q','J','T','9','8','7','6','5','4','3','2'];
