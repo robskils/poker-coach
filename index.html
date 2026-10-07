@@ -1194,7 +1194,7 @@ hr.gold { border-color: var(--border-gold); }
     <button class="nav-btn" onclick="show('postflop')">Post-Flop</button>
     <button class="nav-btn" onclick="show('tournament')">Tournaments</button>
     <button class="nav-btn" onclick="show('drills')">Drills</button>
-    <button class="nav-btn" onclick="show('stats')">Stats &amp; Odds</button>
+    <button class="nav-btn" onclick="show('stats')">The Numbers</button>
   </div>
   <div class="nav-mobile">
     <span class="nav-current" id="nav-current-label">Home</span>
@@ -1211,7 +1211,7 @@ hr.gold { border-color: var(--border-gold); }
   <button onclick="show('tournament')">5. Tournaments</button>
   <div class="dd-divider"></div>
   <button onclick="show('drills')">⚡ Drills</button>
-  <button onclick="show('stats')">📐 Stats &amp; Odds</button>
+  <button onclick="show('stats')">📐 The Numbers</button>
 </div>
 
 <!-- ══════════════════ HOME ══════════════════ -->
@@ -1291,8 +1291,8 @@ hr.gold { border-color: var(--border-gold); }
     </div>
     <div class="module-card" data-suit="%" onclick="show('stats')">
       <div class="module-num">Reference</div>
-      <h3>Stats &amp; Odds</h3>
-      <p>Every key number in one place - outs, equity, pot odds, and hand probabilities.</p>
+      <h3>The Numbers</h3>
+      <p>Outs, equity, pot odds, matchup percentages. Learn these cold and decisions make themselves.</p>
       <div class="module-cta">
         <span class="module-cta-label">Open</span>
         <span class="module-cta-arrow">→</span>
@@ -1966,8 +1966,8 @@ hr.gold { border-color: var(--border-gold); }
   <div class="section-head">
     <div class="section-icon">📐</div>
     <div>
-      <h2>Stats &amp; Odds</h2>
-      <div class="subtitle">Every key number in one place - learn these and decisions get much easier</div>
+      <h2>The Numbers</h2>
+      <div class="subtitle">Learn these cold and decisions start making themselves</div>
     </div>
   </div>
 
@@ -2374,7 +2374,7 @@ hr.gold { border-color: var(--border-gold); }
 
 <script>
 // ── NAVIGATION ──
-const navLabels = { home:'Home', basics:'Basics', hands:'Starting Hands', preflop:'Pre-Flop', postflop:'Post-Flop', tournament:'Tournaments', drills:'Drills', stats:'Stats & Odds' };
+const navLabels = { home:'Home', basics:'Basics', hands:'Starting Hands', preflop:'Pre-Flop', postflop:'Post-Flop', tournament:'Tournaments', drills:'Drills', stats:'The Numbers' };
 function show(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
