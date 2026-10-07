@@ -3246,15 +3246,29 @@ const quizData = {
 // ── QUIZ STATE ──
 const quizState = {};
 
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 function initQuiz(moduleId) {
-  const questions = quizData[moduleId];
-  quizState[moduleId] = { current: 0, correct: 0, answered: false };
+  const raw = quizData[moduleId];
+  const questions = shuffle(raw).map(q => {
+    const correct = q.opts[q.ans];
+    const opts = shuffle(q.opts);
+    return { ...q, opts, ans: opts.indexOf(correct) };
+  });
+  quizState[moduleId] = { current: 0, correct: 0, answered: false, questions };
   renderQuestion(moduleId);
 }
 
 function renderQuestion(moduleId) {
   const state = quizState[moduleId];
-  const questions = quizData[moduleId];
+  const questions = state.questions || quizData[moduleId];
   const q = questions[state.current];
   const body = document.getElementById(`quiz-${moduleId}-body`);
   const total = questions.length;
@@ -3318,7 +3332,8 @@ function checkAnswer(moduleId, selected) {
   if (state.answered) return;
   state.answered = true;
 
-  const q = quizData[moduleId][state.current];
+  const questions = state.questions || quizData[moduleId];
+  const q = questions[state.current];
   const isCorrect = selected === q.ans;
   if (isCorrect) state.correct++;
 
@@ -3334,7 +3349,7 @@ function checkAnswer(moduleId, selected) {
   exp.classList.add('show');
 
   const nav = document.getElementById(`nav-${moduleId}`);
-  const total = quizData[moduleId].length;
+  const total = questions.length;
   const isLast = state.current === total - 1;
 
   nav.innerHTML = `<button class="btn" onclick="nextQuestion('${moduleId}')">${isLast ? 'See Results' : 'Next →'}</button>`;
@@ -3342,7 +3357,8 @@ function checkAnswer(moduleId, selected) {
 
 function nextQuestion(moduleId) {
   const state = quizState[moduleId];
-  const total = quizData[moduleId].length;
+  const questions = state.questions || quizData[moduleId];
+  const total = questions.length;
   state.current++;
   state.answered = false;
 
@@ -3356,7 +3372,8 @@ function nextQuestion(moduleId) {
 
 function showResult(moduleId) {
   const state = quizState[moduleId];
-  const total = quizData[moduleId].length;
+  const questions = state.questions || quizData[moduleId];
+  const total = questions.length;
   const pct = Math.round((state.correct / total) * 100);
   const body = document.getElementById(`quiz-${moduleId}-body`);
 
