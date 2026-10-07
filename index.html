@@ -791,6 +791,234 @@ p { color: var(--text); margin-bottom: 12px; }
 .out-card .outs-count.pair { color: var(--blue-bright); }
 .out-card .outs-count.two { color: var(--gold-bright); }
 
+/* ── STATS PAGE ── */
+.stats-section-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold-muted);
+  opacity: 0.7;
+  margin: 32px 0 14px;
+}
+.stats-section-title:first-child { margin-top: 0; }
+
+/* Rule of 2 & 4 */
+.rule-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.rule-card {
+  background: linear-gradient(160deg, #0d2114 0%, #07100a 100%);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-top: 2px solid var(--gold);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+.rule-multiplier {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 56px;
+  font-weight: 800;
+  color: var(--gold);
+  line-height: 1;
+  opacity: 0.9;
+}
+.rule-subtitle { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+.rule-example { font-size: 13px; color: var(--text); margin-top: 10px; font-weight: 600; }
+
+/* Outs reference table */
+.outs-ref-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+}
+.outs-ref-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  transition: border-color .2s;
+}
+.outs-ref-row:hover { border-color: var(--border-gold); }
+.outs-ref-name { font-size: 13px; color: var(--text); font-weight: 600; }
+.outs-ref-nums { display: flex; gap: 10px; align-items: center; }
+.outs-num {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+}
+.outs-pct { font-size: 11px; color: var(--muted); }
+
+/* Pot odds table */
+.odds-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 4px;
+  font-size: 13px;
+}
+.odds-table thead th {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--gold-muted);
+  opacity: 0.7;
+  padding: 0 12px 8px;
+  text-align: left;
+}
+.odds-table tbody tr {
+  background: rgba(255,255,255,0.02);
+  border-radius: 6px;
+}
+.odds-table tbody td {
+  padding: 10px 12px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+.odds-table tbody td:first-child { border-left: 1px solid var(--border); border-radius: 6px 0 0 6px; }
+.odds-table tbody td:last-child { border-right: 1px solid var(--border); border-radius: 0 6px 6px 0; }
+.odds-table tbody tr:hover td { border-color: var(--border-gold); }
+.odds-verdict {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.odds-verdict.call { background: rgba(8,43,20,0.8); color: #4eca7a; border: 1px solid #1a4a28; }
+.odds-verdict.fold { background: rgba(80,10,10,0.6); color: #e86060; border: 1px solid #5a1a1a; }
+.odds-verdict.marginal { background: rgba(40,30,5,0.8); color: #d4a030; border: 1px solid #5a4010; }
+
+/* Matchup grid */
+.matchup-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 8px;
+}
+.matchup-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  transition: border-color .2s;
+}
+.matchup-card:hover { border-color: var(--border-gold); }
+.matchup-hands {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.matchup-bar-wrap {
+  display: flex;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
+  background: rgba(255,255,255,0.05);
+}
+.matchup-bar-a { background: var(--gold); height: 100%; }
+.matchup-bar-b { background: var(--red-bright); height: 100%; opacity: 0.6; }
+.matchup-pcts { display: flex; justify-content: space-between; font-size: 12px; }
+.matchup-pct-a { color: var(--gold); font-weight: 700; }
+.matchup-pct-b { color: var(--muted); }
+
+/* Hand probability table */
+.hand-prob-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+}
+.hand-prob-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border-gold);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: border-color .2s;
+}
+.hand-prob-card:hover { border-color: var(--border-gold); border-left-color: var(--gold); }
+.hand-prob-name { font-size: 13px; color: var(--text); font-weight: 600; }
+.hand-prob-pct {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+/* Position stats */
+.pos-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+.pos-stat-card {
+  background: linear-gradient(160deg, #0d2114 0%, #07100a 100%);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 10px;
+  padding: 16px 14px;
+  text-align: center;
+}
+.pos-stat-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.pos-stat-val {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--gold);
+  line-height: 1;
+}
+.pos-stat-sub { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+
+/* Push/fold thresholds */
+.pushfold-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+}
+.pushfold-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+.pushfold-bb { font-size: 13px; color: var(--text); font-weight: 700; }
+.pushfold-action { font-size: 12px; color: var(--muted); }
+.pushfold-tag {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.pushfold-tag.shove { background: rgba(8,43,20,0.8); color: #4eca7a; border: 1px solid #1a4a28; }
+.pushfold-tag.careful { background: rgba(40,30,5,0.8); color: #d4a030; border: 1px solid #5a4010; }
+.pushfold-tag.normal { background: rgba(255,255,255,0.04); color: var(--muted); border: 1px solid var(--border); }
+
+@media (max-width: 640px) {
+  .rule-strip { grid-template-columns: 1fr; }
+  .outs-ref-grid { grid-template-columns: 1fr; }
+  .matchup-grid { grid-template-columns: 1fr; }
+  .hand-prob-grid { grid-template-columns: 1fr 1fr; }
+  .pos-stat-grid { grid-template-columns: 1fr 1fr; }
+  .pushfold-grid { grid-template-columns: 1fr; }
+}
+
 /* ── DECISION TREE ── */
 .decision-tree { margin: 16px 0; }
 .dtree-node {
@@ -966,6 +1194,7 @@ hr.gold { border-color: var(--border-gold); }
     <button class="nav-btn" onclick="show('postflop')">Post-Flop</button>
     <button class="nav-btn" onclick="show('tournament')">Tournaments</button>
     <button class="nav-btn" onclick="show('drills')">Drills</button>
+    <button class="nav-btn" onclick="show('stats')">Stats &amp; Odds</button>
   </div>
   <div class="nav-mobile">
     <span class="nav-current" id="nav-current-label">Home</span>
@@ -982,6 +1211,7 @@ hr.gold { border-color: var(--border-gold); }
   <button onclick="show('tournament')">5. Tournaments</button>
   <div class="dd-divider"></div>
   <button onclick="show('drills')">⚡ Drills</button>
+  <button onclick="show('stats')">📐 Stats &amp; Odds</button>
 </div>
 
 <!-- ══════════════════ HOME ══════════════════ -->
@@ -1058,6 +1288,15 @@ hr.gold { border-color: var(--border-gold); }
         <span class="module-cta-arrow">→</span>
       </div>
       <div class="badge" id="badge-drills" style="display:none"></div>
+    </div>
+    <div class="module-card" data-suit="%" onclick="show('stats')">
+      <div class="module-num">Reference</div>
+      <h3>Stats &amp; Odds</h3>
+      <p>Every key number in one place - outs, equity, pot odds, and hand probabilities.</p>
+      <div class="module-cta">
+        <span class="module-cta-label">Open</span>
+        <span class="module-cta-arrow">→</span>
+      </div>
     </div>
   </div>
   <div class="how-to-use">
@@ -1722,6 +1961,360 @@ hr.gold { border-color: var(--border-gold); }
   </div>
 </div>
 
+<!-- ══════════════════ STATS & ODDS ══════════════════ -->
+<div id="stats" class="section">
+  <div class="section-head">
+    <div class="section-icon">📐</div>
+    <div>
+      <h2>Stats &amp; Odds</h2>
+      <div class="subtitle">Every key number in one place - learn these and decisions get much easier</div>
+    </div>
+  </div>
+
+  <p class="stats-section-title">The Rule of 2 &amp; 4</p>
+  <div class="rule-strip">
+    <div class="rule-card">
+      <div class="rule-multiplier">×4</div>
+      <div class="rule-subtitle">Multiply your outs by 4 when you have <strong>two cards to come</strong> (on the flop)</div>
+      <div class="rule-example">9 outs flush draw = ~36% to hit by river</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-multiplier">×2</div>
+      <div class="rule-subtitle">Multiply your outs by 2 when you have <strong>one card to come</strong> (on the turn)</div>
+      <div class="rule-example">9 outs flush draw = ~18% to hit on river</div>
+    </div>
+  </div>
+  <div class="callout" style="margin-bottom:24px">
+    <strong>What counts as an out?</strong> An out is any unseen card that would complete your hand and likely make it the best hand. Count carefully - some outs may give your opponent a better hand (a "dirty out").
+  </div>
+
+  <p class="stats-section-title">Common Draws &amp; Their Outs</p>
+  <div class="outs-ref-grid">
+    <div class="outs-ref-row">
+      <span class="outs-ref-name">Flush draw</span>
+      <div class="outs-ref-nums">
+        <span class="outs-num" style="color:var(--purple)">9</span>
+        <div>
+          <div class="outs-pct">~36% (2 to come)</div>
+          <div class="outs-pct">~18% (1 to come)</div>
+        </div>
+      </div>
+    </div>
+    <div class="outs-ref-row">
+      <span class="outs-ref-name">Open-ended straight</span>
+      <div class="outs-ref-nums">
+        <span class="outs-num" style="color:#d4a030">8</span>
+        <div>
+          <div class="outs-pct">~32% (2 to come)</div>
+          <div class="outs-pct">~16% (1 to come)</div>
+        </div>
+      </div>
+    </div>
+    <div class="outs-ref-row">
+      <span class="outs-ref-name">Flush + OESD combo</span>
+      <div class="outs-ref-nums">
+        <span class="outs-num" style="color:var(--gold)">15</span>
+        <div>
+          <div class="outs-pct">~54% (2 to come)</div>
+          <div class="outs-pct">~30% (1 to come)</div>
+        </div>
+      </div>
+    </div>
+    <div class="outs-ref-row">
+      <span class="outs-ref-name">Gutshot straight</span>
+      <div class="outs-ref-nums">
+        <span class="outs-num" style="color:var(--red-bright)">4</span>
+        <div>
+          <div class="outs-pct">~16% (2 to come)</div>
+          <div class="outs-pct">~8% (1 to come)</div>
+        </div>
+      </div>
+    </div>
+    <div class="outs-ref-row">
+      <span class="outs-ref-name">Pair to two pair</span>
+      <div class="outs-ref-nums">
+        <span class="outs-num" style="color:var(--blue-bright)">5</span>
+        <div>
+          <div class="outs-pct">~20% (2 to come)</div>
+          <div class="outs-pct">~10% (1 to come)</div>
+        </div>
+      </div>
+    </div>
+    <div class="outs-ref-row">
+      <span class="outs-ref-name">Two pair to full house</span>
+      <div class="outs-ref-nums">
+        <span class="outs-num" style="color:var(--gold-muted)">4</span>
+        <div>
+          <div class="outs-pct">~16% (2 to come)</div>
+          <div class="outs-pct">~8% (1 to come)</div>
+        </div>
+      </div>
+    </div>
+    <div class="outs-ref-row">
+      <span class="outs-ref-name">Set to full house/quads</span>
+      <div class="outs-ref-nums">
+        <span class="outs-num" style="color:var(--gold)">7</span>
+        <div>
+          <div class="outs-pct">~28% (2 to come)</div>
+          <div class="outs-pct">~14% (1 to come)</div>
+        </div>
+      </div>
+    </div>
+    <div class="outs-ref-row">
+      <span class="outs-ref-name">Overcards to pair</span>
+      <div class="outs-ref-nums">
+        <span class="outs-num" style="color:var(--muted)">6</span>
+        <div>
+          <div class="outs-pct">~24% (2 to come)</div>
+          <div class="outs-pct">~12% (1 to come)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="stats-section-title">Pot Odds - When to Call a Draw</p>
+  <div class="callout" style="margin-bottom:12px">
+    <strong>How it works:</strong> If you need to call 20 into a pot of 80 (total pot = 100), you're getting 4:1 odds = 20% equity needed. Your draw needs to hit more than 20% of the time to call profitably.
+  </div>
+  <table class="odds-table">
+    <thead>
+      <tr>
+        <th>Situation (call : pot)</th>
+        <th>Odds</th>
+        <th>Min. equity needed</th>
+        <th>Verdict</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Call 10 into pot of 30</td>
+        <td>3:1</td>
+        <td>25%</td>
+        <td><span class="odds-verdict call">Call with flush/OESD</span></td>
+      </tr>
+      <tr>
+        <td>Call 20 into pot of 40</td>
+        <td>2:1</td>
+        <td>33%</td>
+        <td><span class="odds-verdict marginal">Need strong draw</span></td>
+      </tr>
+      <tr>
+        <td>Call 25 into pot of 50</td>
+        <td>2:1</td>
+        <td>33%</td>
+        <td><span class="odds-verdict marginal">Flush draw borderline</span></td>
+      </tr>
+      <tr>
+        <td>Call 30 into pot of 40</td>
+        <td>1.33:1</td>
+        <td>43%</td>
+        <td><span class="odds-verdict fold">Need combo draw</span></td>
+      </tr>
+      <tr>
+        <td>Call 50 into pot of 50</td>
+        <td>1:1</td>
+        <td>50%</td>
+        <td><span class="odds-verdict fold">Almost always fold</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="stats-section-title">Pre-Flop Matchups</p>
+  <div class="matchup-grid">
+    <div class="matchup-card">
+      <div class="matchup-hands">AA vs KK</div>
+      <div class="matchup-bar-wrap">
+        <div class="matchup-bar-a" style="width:82%"></div>
+        <div class="matchup-bar-b" style="width:18%"></div>
+      </div>
+      <div class="matchup-pcts"><span class="matchup-pct-a">82% AA wins</span><span class="matchup-pct-b">18% KK</span></div>
+    </div>
+    <div class="matchup-card">
+      <div class="matchup-hands">AK vs QQ (classic flip)</div>
+      <div class="matchup-bar-wrap">
+        <div class="matchup-bar-a" style="width:46%"></div>
+        <div class="matchup-bar-b" style="width:54%"></div>
+      </div>
+      <div class="matchup-pcts"><span class="matchup-pct-a">46% AK wins</span><span class="matchup-pct-b">54% QQ</span></div>
+    </div>
+    <div class="matchup-card">
+      <div class="matchup-hands">AK vs 22 (coin flip)</div>
+      <div class="matchup-bar-wrap">
+        <div class="matchup-bar-a" style="width:51%"></div>
+        <div class="matchup-bar-b" style="width:49%"></div>
+      </div>
+      <div class="matchup-pcts"><span class="matchup-pct-a">51% AK wins</span><span class="matchup-pct-b">49% 22</span></div>
+    </div>
+    <div class="matchup-card">
+      <div class="matchup-hands">AA vs 72o (domination)</div>
+      <div class="matchup-bar-wrap">
+        <div class="matchup-bar-a" style="width:88%"></div>
+        <div class="matchup-bar-b" style="width:12%"></div>
+      </div>
+      <div class="matchup-pcts"><span class="matchup-pct-a">88% AA wins</span><span class="matchup-pct-b">12% 72o</span></div>
+    </div>
+    <div class="matchup-card">
+      <div class="matchup-hands">KK vs AK (pair vs overcards)</div>
+      <div class="matchup-bar-wrap">
+        <div class="matchup-bar-a" style="width:70%"></div>
+        <div class="matchup-bar-b" style="width:30%"></div>
+      </div>
+      <div class="matchup-pcts"><span class="matchup-pct-a">70% KK wins</span><span class="matchup-pct-b">30% AK</span></div>
+    </div>
+    <div class="matchup-card">
+      <div class="matchup-hands">77 vs AK (classic flip)</div>
+      <div class="matchup-bar-wrap">
+        <div class="matchup-bar-a" style="width:55%"></div>
+        <div class="matchup-bar-b" style="width:45%"></div>
+      </div>
+      <div class="matchup-pcts"><span class="matchup-pct-a">55% 77 wins</span><span class="matchup-pct-b">45% AK</span></div>
+    </div>
+  </div>
+
+  <p class="stats-section-title">Hand Probability - Being Dealt</p>
+  <div class="hand-prob-grid">
+    <div class="hand-prob-card">
+      <span class="hand-prob-name">Pocket aces (AA)</span>
+      <span class="hand-prob-pct" style="color:var(--gold)">0.45%</span>
+    </div>
+    <div class="hand-prob-card">
+      <span class="hand-prob-name">Any pocket pair</span>
+      <span class="hand-prob-pct" style="color:#d4a030">5.9%</span>
+    </div>
+    <div class="hand-prob-card">
+      <span class="hand-prob-name">AK suited</span>
+      <span class="hand-prob-pct">0.3%</span>
+    </div>
+    <div class="hand-prob-card">
+      <span class="hand-prob-name">AK any</span>
+      <span class="hand-prob-pct">1.2%</span>
+    </div>
+    <div class="hand-prob-card">
+      <span class="hand-prob-name">Premium hand (JJ+, AK)</span>
+      <span class="hand-prob-pct" style="color:#4eca7a">3.6%</span>
+    </div>
+    <div class="hand-prob-card">
+      <span class="hand-prob-name">Suited connectors 54s-KQs</span>
+      <span class="hand-prob-pct">3.9%</span>
+    </div>
+    <div class="hand-prob-card">
+      <span class="hand-prob-name">Two suited cards</span>
+      <span class="hand-prob-pct">23.5%</span>
+    </div>
+    <div class="hand-prob-card">
+      <span class="hand-prob-name">At least one ace</span>
+      <span class="hand-prob-pct">14.9%</span>
+    </div>
+  </div>
+
+  <p class="stats-section-title">Stack Size Thresholds</p>
+  <div class="pushfold-grid">
+    <div class="pushfold-row">
+      <span class="pushfold-bb">20+ BB</span>
+      <span class="pushfold-action">Play normal poker</span>
+      <span class="pushfold-tag normal">Full game</span>
+    </div>
+    <div class="pushfold-row">
+      <span class="pushfold-bb">15-20 BB</span>
+      <span class="pushfold-action">3-bet or fold pre-flop</span>
+      <span class="pushfold-tag careful">Selective</span>
+    </div>
+    <div class="pushfold-row">
+      <span class="pushfold-bb">10-15 BB</span>
+      <span class="pushfold-action">Push/fold mode begins</span>
+      <span class="pushfold-tag careful">Push or fold</span>
+    </div>
+    <div class="pushfold-row">
+      <span class="pushfold-bb">Under 10 BB</span>
+      <span class="pushfold-action">Shove any decent hand</span>
+      <span class="pushfold-tag shove">Ship it</span>
+    </div>
+    <div class="pushfold-row">
+      <span class="pushfold-bb">Under 5 BB</span>
+      <span class="pushfold-action">Any two cards from BTN/SB</span>
+      <span class="pushfold-tag shove">Emergency shove</span>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:12px">
+    <strong>M-ratio shortcut:</strong> Divide your stack by the total blinds + antes in one round. Under 10 = danger zone, start pushing. Under 5 = shove or go home.
+  </div>
+
+  <p class="stats-section-title">Key Position Numbers</p>
+  <div class="pos-stat-grid">
+    <div class="pos-stat-card">
+      <div class="pos-stat-label">Button VPIP</div>
+      <div class="pos-stat-val">+15%</div>
+      <div class="pos-stat-sub">Play 15% more hands from the button vs early position</div>
+    </div>
+    <div class="pos-stat-card">
+      <div class="pos-stat-label">BB defense</div>
+      <div class="pos-stat-val">40%</div>
+      <div class="pos-stat-sub">Defend your BB roughly 40% vs a standard steal raise</div>
+    </div>
+    <div class="pos-stat-card">
+      <div class="pos-stat-label">C-bet frequency</div>
+      <div class="pos-stat-val">60%</div>
+      <div class="pos-stat-sub">Continuation bet roughly 60% of flops as the pre-flop raiser</div>
+    </div>
+    <div class="pos-stat-card">
+      <div class="pos-stat-label">3-bet %</div>
+      <div class="pos-stat-val">7-9%</div>
+      <div class="pos-stat-sub">3-bet around 7-9% of hands in position, tighter out of position</div>
+    </div>
+    <div class="pos-stat-card">
+      <div class="pos-stat-label">Button steal</div>
+      <div class="pos-stat-val">40%</div>
+      <div class="pos-stat-sub">Steal attempt from button roughly 40% vs recreational players</div>
+    </div>
+    <div class="pos-stat-card">
+      <div class="pos-stat-label">Fold to c-bet</div>
+      <div class="pos-stat-val">50%</div>
+      <div class="pos-stat-sub">Average player folds to c-bets about 50% - so keep firing</div>
+    </div>
+  </div>
+
+  <p class="stats-section-title">Post-Flop Board Texture Odds</p>
+  <div class="outs-ref-grid">
+    <div class="outs-ref-row">
+      <span class="outs-ref-name">Flopping a set (have pair)</span>
+      <div class="outs-ref-nums">
+        <span class="outs-num" style="color:var(--gold)">11.8%</span>
+      </div>
+    </div>
+    <div class="outs-ref-row">
+      <span class="outs-ref-name">Flopping two pair</span>
+      <div class="outs-ref-nums">
+        <span class="outs-num" style="color:#d4a030">2%</span>
+      </div>
+    </div>
+    <div class="outs-ref-row">
+      <span class="outs-ref-name">Flopping a flush draw</span>
+      <div class="outs-ref-nums">
+        <span class="outs-num" style="color:var(--purple)">10.9%</span>
+      </div>
+    </div>
+    <div class="outs-ref-row">
+      <span class="outs-ref-name">Flopping top pair (unpaired hand)</span>
+      <div class="outs-ref-nums">
+        <span class="outs-num" style="color:var(--blue-bright)">29%</span>
+      </div>
+    </div>
+    <div class="outs-ref-row">
+      <span class="outs-ref-name">Board being paired on turn</span>
+      <div class="outs-ref-nums">
+        <span class="outs-num" style="color:var(--muted)">22%</span>
+      </div>
+    </div>
+    <div class="outs-ref-row">
+      <span class="outs-ref-name">Flush completing by river</span>
+      <div class="outs-ref-nums">
+        <span class="outs-num" style="color:var(--purple)">35%</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
 <!-- ══════════════════ DRILLS ══════════════════ -->
 <div id="drills" class="section">
   <div class="section-head">
@@ -1781,7 +2374,7 @@ hr.gold { border-color: var(--border-gold); }
 
 <script>
 // ── NAVIGATION ──
-const navLabels = { home:'Home', basics:'Basics', hands:'Starting Hands', preflop:'Pre-Flop', postflop:'Post-Flop', tournament:'Tournaments', drills:'Drills' };
+const navLabels = { home:'Home', basics:'Basics', hands:'Starting Hands', preflop:'Pre-Flop', postflop:'Post-Flop', tournament:'Tournaments', drills:'Drills', stats:'Stats & Odds' };
 function show(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
