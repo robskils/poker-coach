@@ -9,27 +9,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #060909;
-  --surface: #0b1410;
-  --surface2: #101c15;
-  --felt: #082b14;
-  --felt-mid: #0c3318;
-  --border: #1c2e20;
-  --border-gold: #3a3010;
-  --gold: #c9a84c;
-  --gold-dim: #1c1a08;
-  --gold-bright: #e8d070;
-  --gold-muted: #6a5820;
-  --red: #b83232;
-  --red-bright: #e05555;
-  --blue: #2e7abf;
-  --blue-bright: #60aadf;
-  --purple: #8855bb;
-  --green: #2a8a48;
-  --green-bright: #3aaa5a;
-  --green-dim: #0d2a18;
-  --text: #ddd5b0;
-  --muted: #7a8a6a;
+  --bg: #0a0f0b;
+  --surface: #111a13;
+  --surface2: #162018;
+  --felt: #0d3318;
+  --felt-mid: #103d1e;
+  --border: #263828;
+  --border-gold: #4a3e18;
+  --gold: #d4b05a;
+  --gold-dim: #221e08;
+  --gold-bright: #eedd80;
+  --gold-muted: #8a7030;
+  --red: #c03838;
+  --red-bright: #e86868;
+  --blue: #3a88cc;
+  --blue-bright: #70bbee;
+  --purple: #9966cc;
+  --green: #38a058;
+  --green-bright: #4aba6a;
+  --green-dim: #102e1c;
+  --text: #ece5c8;
+  --muted: #a8b898;
   --card-red: #cc2020;
   --radius: 10px;
 }
@@ -364,17 +364,18 @@ h3 {
 }
 h3::before { content: '◆'; font-size: 8px; color: var(--gold-muted); }
 h4 { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 8px; }
-p { color: var(--text); margin-bottom: 12px; }
-.subtitle { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+p { color: var(--text); margin-bottom: 12px; font-size: 15px; }
+.subtitle { color: var(--muted); font-size: 15px; margin-bottom: 24px; }
 
 .callout {
-  background: linear-gradient(135deg, var(--felt) 0%, rgba(8,43,20,0.6) 100%);
+  background: linear-gradient(135deg, rgba(13,50,26,0.9) 0%, rgba(10,20,14,0.7) 100%);
   border-left: 3px solid var(--gold);
   border-radius: 0 var(--radius) var(--radius) 0;
-  padding: 14px 16px;
+  padding: 16px 18px;
   margin: 16px 0;
   font-size: 15px;
-  box-shadow: inset 0 1px 0 rgba(201,168,76,0.08);
+  color: var(--text);
+  box-shadow: inset 0 1px 0 rgba(201,168,76,0.1);
 }
 .callout.warn { border-color: var(--red); background: linear-gradient(135deg, rgba(50,10,10,0.7) 0%, rgba(30,5,5,0.5) 100%); }
 .callout.tip { border-color: var(--blue); background: linear-gradient(135deg, rgba(10,20,50,0.7) 0%, rgba(5,10,30,0.5) 100%); }
@@ -598,41 +599,42 @@ p { color: var(--text); margin-bottom: 12px; }
   box-shadow: 0 0 6px rgba(201,168,76,0.5);
 }
 .quiz-scenario {
-  background: rgba(6,9,8,0.6);
+  background: rgba(16,26,18,0.8);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 16px;
+  padding: 18px;
   margin-bottom: 18px;
 }
 .quiz-scenario .scenario-label {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: var(--gold-muted);
+  color: var(--gold);
   margin-bottom: 10px;
   font-weight: 700;
+  opacity: 0.7;
 }
 .quiz-question {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   color: var(--text);
   margin-bottom: 8px;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 .quiz-context {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
   margin-top: 8px;
   font-style: italic;
 }
 .quiz-options { display: flex; flex-direction: column; gap: 8px; }
 .quiz-opt {
-  background: rgba(6,9,8,0.5);
+  background: rgba(16,26,18,0.5);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 12px 16px;
+  padding: 14px 16px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 15px;
   color: var(--text);
   text-align: left;
   transition: border-color .15s, background .15s, box-shadow .15s;
@@ -661,13 +663,14 @@ p { color: var(--text); margin-bottom: 12px; }
 .quiz-opt.wrong .opt-letter { background: var(--red); color: #fff; }
 .quiz-opt:disabled { cursor: default; }
 .quiz-explanation {
-  background: rgba(8,43,20,0.4);
-  border: 1px solid rgba(42,138,74,0.3);
+  background: rgba(13,50,26,0.6);
+  border: 1px solid rgba(58,160,88,0.4);
   border-radius: 8px;
-  padding: 14px 16px;
+  padding: 16px 18px;
   margin-top: 16px;
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text);
   display: none;
 }
 .quiz-explanation.show { display: block; }
@@ -1476,7 +1479,7 @@ hr.gold { border-color: var(--border-gold); }
     </div>
     <div class="vs">AKs</div>
   </div>
-  <p style="font-size:13px;color:var(--muted)">Raise big pre-flop. Re-raise (3-bet) anyone who raises before you.</p>
+  <p style="font-size:15px;color:var(--muted)">Raise big pre-flop. Re-raise (3-bet) anyone who raises before you.</p>
 
   <h4>Strong — Raise from most positions</h4>
   <div class="card-display">
@@ -1501,7 +1504,7 @@ hr.gold { border-color: var(--border-gold); }
       <div class="card red">Q<span class="suit">♥</span></div>
     </div>
   </div>
-  <p style="font-size:13px;color:var(--muted)">JJ, TT, AQs, AJs, KQs — open-raise from HJ onwards. Be cautious if someone raises from early position.</p>
+  <p style="font-size:15px;color:var(--muted)">JJ, TT, AQs, AJs, KQs — open-raise from HJ onwards. Be cautious if someone raises from early position.</p>
 
   <h4>Playable — Position dependent</h4>
   <div class="card-display">
@@ -1526,7 +1529,7 @@ hr.gold { border-color: var(--border-gold); }
       <div class="card">9<span class="suit">♦</span></div>
     </div>
   </div>
-  <p style="font-size:13px;color:var(--muted)">Small pairs, suited connectors, suited Ax — raise from CO and BTN, fold or call from earlier. These hands need position to be profitable.</p>
+  <p style="font-size:15px;color:var(--muted)">Small pairs, suited connectors, suited Ax — raise from CO and BTN, fold or call from earlier. These hands need position to be profitable.</p>
 
   <h4>Trash — Almost always fold</h4>
   <div class="card-display">
@@ -1547,7 +1550,7 @@ hr.gold { border-color: var(--border-gold); }
       <div class="card">3<span class="suit">♦</span></div>
     </div>
   </div>
-  <p style="font-size:13px;color:var(--muted)">Offsuit raggy hands — just fold. Even on the button, K3o and J5o put you in dominated situations you can't escape from.</p>
+  <p style="font-size:15px;color:var(--muted)">Offsuit raggy hands — just fold. Even on the button, K3o and J5o put you in dominated situations you can't escape from.</p>
 
   <h3>The Hand Matrix</h3>
   <p>Pairs are on the diagonal (top-left to bottom-right). Above the diagonal = suited. Below = offsuit. Suited hands are roughly 3–4% stronger because flush draws are possible.</p>
